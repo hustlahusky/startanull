@@ -1,0 +1,21 @@
+{
+  "name": "hustlahusky.me",
+  "authors": [
+    "Constantine Karnaukhov <genteelknight@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "foundation-sites": "^6.1.2"
+  }
+}
