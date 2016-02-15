@@ -15,7 +15,7 @@
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>HUSTLAHUSKY.ME</title>
-	<link rel="stylesheet" href="bower_components/foundation-sites/dist/foundation.css" />
+	<link rel="stylesheet" href="assets/css/main.css" />
 </head>
 <body>
 <!-- HEADER -->
@@ -31,9 +31,9 @@
 
 <h1>Hello, world!</h1>
 
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
-<!--<script src="js/vendor/what-input.min.js"></script>-->
-<script src="bower_components/foundation-sites/dist/foundation.min.js"></script>
+<script src="src/components/jquery/dist/jquery.min.js"></script>
+<script src="src/components/what-input/what-input.min.js"></script>
+<script src="src/components/foundation-sites/dist/foundation.min.js"></script>
 <script src="assets/js/main.js"></script>
 </body>
 </html>

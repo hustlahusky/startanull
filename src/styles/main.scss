@@ -1,7 +1,9 @@
-$bower: "../components/";
+// Import foundation, its globals and utilities
 
+@import '../components/foundation-sites/scss/util/util';
+@import '../components/foundation-sites/scss/global';
 @import '../components/foundation-sites/assets/foundation';
 
 body {
-  color: #000;
+  color: $primary-color;
 }
