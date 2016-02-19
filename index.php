@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: const
- * Date: 13.02.16
- * Time: 21:23
- */
-
 //require_once('');
 ?>
 <!doctype html>
