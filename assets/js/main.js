@@ -48,9 +48,9 @@
 
 	var Hello = __webpack_require__(1);
 
-	Hello().run();
-	Hello().err();
-	Hello().err("Crash!");
+	Hello.run();
+	Hello.err();
+	Hello.err("Crash!");
 
 	$(window).load(function () {
 	  $(document).foundation();
@@ -61,7 +61,7 @@
 /* 1 */
 /***/ function(module, exports) {
 
-	module.exports = function () {
+	module.exports = (function () {
 	  return {
 	    run: function () {
 	      console.log("Hello, world!");
@@ -71,7 +71,7 @@
 	      console.error(err || "Some error");
 	    }
 	  }
-	};
+	})();
 
 
 /***/ }

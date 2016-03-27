@@ -1,4 +1,4 @@
-module.exports = function () {
+module.exports = (function () {
   return {
     run: function () {
       console.log("Hello, world!");
@@ -8,4 +8,4 @@ module.exports = function () {
       console.error(err || "Some error");
     }
   }
-};
+})();

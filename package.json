@@ -1,10 +1,14 @@
 {
-  "name": "hustlahusky.me",
+  "name": "startanull",
   "version": "0.0.1",
-  "description": "Studio Site",
+  "description": "Gulp tasks for new project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp"
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/hustlahusky/startanull.git"
   },
   "author": "Constantine Karnaukhov <genteelknight@gmail.com>",
   "license": "MIT",
@@ -17,6 +21,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.2.0",
     "gulp-sourcemaps": "^1.6.0",
+    "webpack-stream": "^3.1.0",
     "yargs": "latest"
   }
 }

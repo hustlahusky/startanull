@@ -11,7 +11,6 @@ var rename = require('gulp-rename');
 var sourcemaps = require('gulp-sourcemaps');
 var webpack = require('webpack-stream');
 var argv = require('yargs').argv;
-console.log(webpack);
 // =====================================
 // CONFIG
 // =====================================
@@ -118,11 +117,9 @@ gulp.task('watch', function() {
 // webpack js build
 gulp.task('webpack', function() {
   var src = config.source.mainScript;
-  console.log(config.webpack);
+
   gulp.src(src)
-    //.pipe(sourcemaps.init())
     .pipe(webpack(config.webpack))
-    //.pipe(sourcemaps.write('.', {includeContent: false, sourceRoot: '../../'+config.source.styles}))
     .pipe(gulp.dest(config.result.scripts));
 });
 
