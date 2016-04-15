@@ -1,9 +1,5 @@
-// Import foundation, its globals and utilities
-
-@import '../components/foundation-sites/scss/util/util';
-@import '../components/foundation-sites/scss/global';
-@import '../components/foundation-sites/assets/foundation';
+$var: #ccc;
 
 body {
-  color: $primary-color;
+  background: $var;
 }

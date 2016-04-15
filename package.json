@@ -6,9 +6,9 @@
   "scripts": {
     "test": "gulp"
   },
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/hustlahusky/startanull.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hustlahusky/startanull.git"
   },
   "author": "Constantine Karnaukhov <genteelknight@gmail.com>",
   "license": "MIT",
@@ -18,10 +18,11 @@
     "gulp-autoprefixer": "^3.1.0",
     "gulp-csscomb": "^3.0.6",
     "gulp-cssnano": "^2.1.0",
+    "gulp-jade": "^1.1.0",
+    "gulp-less": "^3.0.5",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.2.0",
     "gulp-sourcemaps": "^1.6.0",
-    "webpack-stream": "^3.1.0",
-    "yargs": "latest"
+    "webpack-stream": "^3.1.0"
   }
 }

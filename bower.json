@@ -15,7 +15,5 @@
     "test",
     "tests"
   ],
-  "dependencies": {
-    "foundation-sites": "^6.1.2"
-  }
+  "dependencies": {}
 }
