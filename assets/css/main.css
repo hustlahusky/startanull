@@ -1,4 +1,7 @@
 body {
-  background: #ccc; }
+  background: #ccc;
+}
 
-/*# sourceMappingURL=main.css.map */
+p {
+  border: 1px solid #ccc;
+}

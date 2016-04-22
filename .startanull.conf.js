@@ -2,41 +2,59 @@
 // CONFIG
 // =====================================
 var path = require("path");
-
-var conf = {
-  cssPreprocessor: "scss",
-  preprocessorOptions: {},
-  webpack: {
-    entry: {
-      app: ""
-    },
-    output: {
-      path: "",
-      filename: ""
-    }
-  }
-};
+var conf = {};
 
 // PATHS
 // =====================================
 conf.source = {};
 conf.source.root = "src/";
-conf.source.styles = conf.source.root+"styles/";
-conf.source.scripts = conf.source.root+"scripts/";
-conf.source.mainStyle = conf.source.styles+"main."+conf.cssPreprocessor;
-conf.source.mainScript = "main.js";
-conf.source.templates = conf.source.root+"jade/*.jade";
 
 conf.result = {};
 conf.result.root = "assets/";
-conf.result.styles = conf.result.root+"css/";
-conf.result.scripts = conf.result.root+"js/";
-conf.result.mainStyle = conf.result.styles+"main.css";
-conf.result.mainScript = conf.result.scripts+"main.js";
-conf.result.templates = conf.result.root;
 
-conf.webpack.entry.app = path.resolve(__dirname, conf.source.scripts) + "/" + conf.source.mainScript;
-conf.webpack.output.path = path.resolve(__dirname, conf.result.scripts);
-conf.webpack.output.filename = "main.js";
+
+// Styles
+conf.cssPreprocessor = "scss";
+conf.preprocessorOptions = {};
+conf.source.styles = {};
+conf.source.styles.dir =  conf.source.root+"styles/";
+conf.source.styles.filename = "main."+conf.cssPreprocessor;
+conf.source.styles.file = conf.source.styles.dir + conf.source.styles.filename;
+
+conf.result.styles = {};
+conf.result.styles.dir = conf.result.root+"css/";
+conf.result.styles.filename = "main.css";
+conf.result.styles.file = conf.result.styles.dir + conf.result.styles.filename;
+
+
+// Scripts
+conf.source.scripts = {};
+conf.source.scripts.dir = conf.source.root+"scripts/";
+conf.source.scripts.filename = "main.js";
+conf.source.scripts.file = conf.source.scripts.dir + conf.source.scripts.filename;
+
+conf.result.scripts = {};
+conf.result.scripts.dir = conf.result.root+"js/";
+conf.result.scripts.filename = "main.js";
+conf.result.scripts.file = conf.result.scripts.dir + conf.result.scripts.filename;
+
+// Webpack
+conf.webpack = {
+  entry: {
+    app: ""
+  },
+  output: {
+    path: "",
+    filename: ""
+  }
+};
+conf.webpack.entry.app = path.resolve(__dirname, conf.source.scripts.dir) + "/" + conf.source.scripts.filename;
+conf.webpack.output.path = path.resolve(__dirname, conf.result.scripts.dir);
+conf.webpack.output.filename = conf.result.scripts.filename;
+
+
+// Templates
+conf.source.templates = conf.source.root+"jade/*.jade";
+conf.result.templates = conf.result.root;
 
 module.exports = conf;
