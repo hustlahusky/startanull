@@ -15,6 +15,7 @@
   "devDependencies": {
     "es6-promise": "^3.0.2",
     "fs-extra": "^0.30.0",
+    "glob": "^7.0.3",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-csscomb": "^3.0.6",
@@ -25,6 +26,7 @@
     "gulp-sass": "^2.2.0",
     "gulp-sourcemaps": "^1.6.0",
     "run-sequence": "^1.1.5",
-    "webpack-stream": "^3.1.0"
+    "webpack-stream": "^3.1.0",
+    "yargs": "^4.6.0"
   }
 }

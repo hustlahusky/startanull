@@ -11,10 +11,10 @@ const conf = {};
 // =====================================
 
 conf.source = {};
-conf.source.root = path.resolve(__dirname, "./src/");
+conf.source.root = path.resolve(__dirname, "src");
 
 conf.result = {};
-conf.result.root = path.resolve(__dirname, "./assets/");
+conf.result.root = path.resolve(__dirname, "assets");
 
 
 // BOWER
@@ -23,13 +23,14 @@ conf.result.root = path.resolve(__dirname, "./assets/");
 conf.bower = {};
 try {
   var bowerConfig = fse.readJsonSync("./.bowerrc", {throws: false});
-  
+
   if (bowerConfig)
     conf.bower = JSON.parse(JSON.stringify(bowerConfig));
 } catch (err) {}
 
 if (typeof conf.bower.directory == "undefined")
   conf.bower.directory = path.resolve(conf.source.root, "bower_components");
+
 
 // STYLES
 // =====================================
@@ -40,29 +41,20 @@ conf.styles.preprocessor = {};
 conf.styles.preprocessor.instance = require('gulp-less');
 conf.styles.preprocessor.options = {};
 
+conf.styles.autoprefixer = {
+  browsers: ['Android 2.3', 'Android >= 4', 'Chrome >= 20', 'Firefox >= 24', 'Explorer >= 8', 'iOS >= 6', 'Opera >= 12', 'Safari >= 7'],
+  cascade: false
+};
+
 conf.styles.source = {};
-conf.styles.source.dir = path.resolve(conf.source.root, "./styles/");
+conf.styles.source.dir = path.resolve(conf.source.root, "styles");
 conf.styles.source.filename = "style.less";
 conf.styles.source.file = conf.styles.source.dir + path.sep + conf.styles.source.filename;
 
 conf.styles.result = {};
-conf.styles.result.dir = path.resolve(conf.result.root, "./css/");
+conf.styles.result.dir = path.resolve(conf.result.root, "css");
 conf.styles.result.filename = "style.css";
 conf.styles.result.file = conf.styles.result.dir + path.sep + conf.styles.result.filename;
-
-
-// TODO remove
-conf.cssPreprocessor = "scss";
-conf.preprocessorOptions = {};
-conf.source.styles = {};
-conf.source.styles.dir =  conf.source.root+"styles/";
-conf.source.styles.filename = "main."+conf.cssPreprocessor;
-conf.source.styles.file = conf.source.styles.dir + conf.source.styles.filename;
-
-conf.result.styles = {};
-conf.result.styles.dir = conf.result.root+"css/";
-conf.result.styles.filename = "main.css";
-conf.result.styles.file = conf.result.styles.dir + conf.result.styles.filename;
 
 
 // SCRIPTS
@@ -70,12 +62,12 @@ conf.result.styles.file = conf.result.styles.dir + conf.result.styles.filename;
 
 conf.scripts = {};
 conf.scripts.source = {};
-conf.scripts.source.dir = path.resolve(conf.source.root, "./scripts/");
+conf.scripts.source.dir = path.resolve(conf.source.root, "scripts");
 conf.scripts.source.filename = "main.js";
 conf.scripts.source.file = conf.scripts.source.dir + path.sep + conf.scripts.source.filename;
 
 conf.scripts.result = {};
-conf.scripts.result.dir = path.resolve(conf.result.root, "./js/");
+conf.scripts.result.dir = path.resolve(conf.result.root, "js");
 conf.scripts.result.filename = "main.js";
 conf.scripts.result.file = conf.scripts.result.dir + path.sep + conf.scripts.result.filename;
 
@@ -94,19 +86,6 @@ conf.scripts.libs = {
   jquery: path.resolve(conf.bower.directory, "jquery/dist")
 };
 
-// TODO remove
-conf.source.scripts = {};
-conf.source.scripts.dir = conf.source.root+"scripts/";
-conf.source.scripts.filename = "main.js";
-conf.source.scripts.file = conf.source.scripts.dir + conf.source.scripts.filename;
-
-conf.result.scripts = {};
-conf.result.scripts.dir = conf.result.root+"js/";
-conf.result.scripts.filename = "main.js";
-conf.result.scripts.file = conf.result.scripts.dir + conf.result.scripts.filename;
-
-
-
 
 // TEMPLATES
 // =====================================
@@ -114,12 +93,63 @@ conf.result.scripts.file = conf.result.scripts.dir + conf.result.scripts.filenam
 conf.templates = {};
 
 conf.templates.source = {};
-conf.templates.source.dir = path.resolve(conf.source.root, "./jade/");
+conf.templates.source.dir = path.resolve(conf.source.root, "jade");
 conf.templates.source.file = conf.templates.source.dir + path.sep + "*.jade";
 conf.templates.source.locals = {};
 
 conf.templates.result = {};
 conf.templates.result.dir = conf.result.root;
+
+
+// COMPONENTS
+// =====================================
+
+conf.components = {};
+
+conf.components.root = path.resolve(__dirname, "components");
+conf.components.mask = conf.components.root + path.sep + "*";
+conf.components.source = conf.components.mask + path.sep + "src";
+conf.components.result = conf.components.mask;
+
+conf.components.styles = {};
+conf.components.styles.source = {};
+conf.components.styles.source.dirname = "styles";
+conf.components.styles.source.dir = conf.components.source + path.sep + conf.components.styles.source.dirname;
+conf.components.styles.source.filename = "style.less";
+conf.components.styles.source.file = conf.components.styles.source.dir + path.sep + conf.components.styles.source.filename;
+
+conf.components.styles.result = {};
+conf.components.styles.result.dirname = "css";
+conf.components.styles.result.dir = conf.components.result + path.sep + conf.components.styles.result.dirname;
+conf.components.styles.result.filename = "style.css";
+conf.components.styles.result.file = conf.components.styles.result.dir + path.sep + conf.components.styles.result.filename;
+
+
+conf.components.scripts = {};
+conf.components.scripts.source = {};
+conf.components.scripts.source.dirname = "scripts";
+conf.components.scripts.source.dir = conf.components.source + path.sep + conf.components.scripts.source.dirname;
+conf.components.scripts.source.filename = "script.js";
+conf.components.scripts.source.file = conf.components.scripts.source.dir + path.sep + conf.components.scripts.source.filename;
+
+conf.components.scripts.result = {};
+conf.components.scripts.result.dirname = "js";
+conf.components.scripts.result.dir = conf.components.result + path.sep + conf.components.scripts.result.dirname;
+conf.components.scripts.result.filename = "script.js";
+conf.components.scripts.result.file = conf.components.scripts.result.dir + path.sep + conf.components.scripts.result.filename;
+/*
+
+conf.components.source = {};
+conf.components.source.dir = conf.components.mask + path.sep + "src";
+conf.components.source.style = conf.components.source.dir + path.sep + "style.less";
+conf.components.source.script = conf.components.source.dir + path.sep + "script.js";
+conf.components.source.template = conf.components.source.dir + path.sep + "template.jade";
+
+conf.components.result = {};
+conf.components.result.dir = '.';
+conf.components.result.style = conf.components.mask + path.sep + conf.components.result.dir + path.sep + "style.css";
+conf.components.result.script = conf.components.mask + path.sep + conf.components.result.dir + path.sep + "script.js";*/
+//conf.components.source.template = conf.components.source.dir + path.sep + "template.jade";
 
 
 // FUNCTIONS
