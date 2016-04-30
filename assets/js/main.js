@@ -52,10 +52,6 @@
 	Hello.err();
 	Hello.err("Crash!");
 
-	$(window).load(function () {
-	  $(document).foundation();
-	});
-
 
 /***/ },
 /* 1 */

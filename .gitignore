@@ -30,4 +30,5 @@ nbproject
 
 # Folders and files to ignore
 node_modules
+bower_components
 .directory
