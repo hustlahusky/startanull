@@ -30,6 +30,9 @@ const conf = require('./.startanull.conf');
 
 // style build
 gulp.task('styles.build', function() {
+  if (!Boolean(conf.styles.source))
+    return console.error("Styles build from sources is disabled");
+
   let src = conf.styles.source.file;
 
   return gulp.src(src)
@@ -41,6 +44,9 @@ gulp.task('styles.build', function() {
 
 // style to dist
 gulp.task('styles.dist', function () {
+  if (!Boolean(conf.styles.result))
+    return console.error("Styles is disabled");
+
   let src = conf.styles.result.file;
 
   return gulp.src(src)
@@ -57,6 +63,9 @@ gulp.task('styles.dist', function () {
 
 // Build styles
 gulp.task('styles.batch', function () {
+  if (!Boolean(conf.styles))
+    return console.error("Styles is disabled");
+
   runSequence('styles.build', 'styles.dist');
 });
 
@@ -66,6 +75,9 @@ gulp.task('styles.batch', function () {
 
 // webpack js build
 gulp.task('scripts.build', function() {
+  if (!Boolean(conf.scripts))
+    return console.error("Scripts is disabled");
+
   let src = conf.scripts.source.file;
 
   return gulp.src(src)
@@ -75,6 +87,9 @@ gulp.task('scripts.build', function() {
 
 // copy js libs to assets
 gulp.task('scripts.copylibs', function() {
+  if (!Boolean(conf.scripts))
+    return console.error("Scripts is disabled");
+
   for (let lib in conf.scripts.libs)
     if (conf.scripts.libs.hasOwnProperty(lib))
       conf.funcs.copyLib(lib);
@@ -86,6 +101,9 @@ gulp.task('scripts.copylibs', function() {
 
 // jade
 gulp.task('templates.build', function() {
+  if (!Boolean(conf.templates))
+    return console.error("Templates is disabled");
+
   let src = conf.templates.source.file;
 
   return gulp.src(src)
@@ -137,6 +155,9 @@ gulp.task('default', function () {
 // -------------------------------------
 
 gulp.task('component.styles.build', function() {
+  if (!Boolean(conf.components.styles))
+    return console.error("Components is disabled");
+
   let style = conf.components.styles.source.file;
 
   if (argv.component) {
@@ -165,6 +186,9 @@ gulp.task('component.styles.build', function() {
 });
 
 gulp.task('component.styles.dist', function () {
+  if (!Boolean(conf.components.styles))
+    return console.error("Components is disabled");
+  
   let src = conf.components.styles.result.file;
 
   if (argv.component) {
@@ -206,6 +230,9 @@ gulp.task('component.styles.batch', function () {
 // -------------------------------------
 
 gulp.task('component.scripts.build', function() {
+  if (!Boolean(conf.components.scripts))
+    return console.error("Components is disabled");
+  
   let src = conf.components.scripts.source.file;
 
   if (argv.component) {
@@ -249,5 +276,8 @@ gulp.task('component.scripts.build', function() {
 // -------------------------------------
 
 gulp.task('component.build', function () {
+  if (!Boolean(conf.components))
+    return console.error("Components is disabled");
+  
   runSequence(['component.styles.batch', 'component.scripts.build']);
 });

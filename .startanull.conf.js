@@ -174,4 +174,12 @@ conf.funcs.copyLib = function (lib) {
   });
 };
 
+
+// CUSTOM INJECTION
+// =====================================
+//conf.components = false;
+
+
+// EXPORT
+// =====================================
 module.exports = conf;
