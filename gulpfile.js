@@ -21,12 +21,12 @@ const conf = require('./.startanull.conf');
 
 
 // =====================================
-// TASKS
+// MAIN
 // =====================================
 
 
 // STYLES
-// =====================================
+// -------------------------------------
 
 // style build
 gulp.task('styles.build', function() {
@@ -62,7 +62,7 @@ gulp.task('styles.batch', function () {
 
 
 // SCRIPTS
-// =====================================
+// -------------------------------------
 
 // webpack js build
 gulp.task('scripts.build', function() {
@@ -82,7 +82,7 @@ gulp.task('scripts.copylibs', function() {
 
 
 // TEMPLATE
-// =====================================
+// -------------------------------------
 
 // jade
 gulp.task('templates.build', function() {
@@ -97,10 +97,45 @@ gulp.task('templates.build', function() {
 });
 
 
+// WATCHERS
+// -------------------------------------
+
+gulp.task('watch', function() {
+  console.log('Start watching for styles');
+
+  // Rebuild styles on change
+
+  let style_watcher = gulp.watch(conf.source.styles.dir+'**', ['styler']);
+  style_watcher.on('change', function(event) {
+    console.log('Stylesheet ' + event.path + ' was ' + event.type + ', rebuild...');
+  });
+
+  // Rebuild templates on change
+
+  let template_watcher = gulp.watch(conf.source.templates.dir + "**", ['jade']);
+  template_watcher.on('change', function(event) {
+    console.log('Template ' + event.path + ' was ' + event.type + ', rebuild...');
+  });
+});
+
+
+// BATCH TASKS
+// -------------------------------------
+
+// build main
+gulp.task('default', function () {
+  runSequence(['styles.batch', 'scripts.build', 'templates.build', 'scripts.copylibs']);
+});
+
+
+
+// =====================================
 // COMPONENTS
 // =====================================
 
-// Compile components styles
+// Styles
+// -------------------------------------
+
 gulp.task('component.styles.build', function() {
   let style = conf.components.styles.source.file;
 
@@ -129,7 +164,6 @@ gulp.task('component.styles.build', function() {
     .pipe(gulp.dest(conf.components.root))
 });
 
-// style to dist
 gulp.task('component.styles.dist', function () {
   let src = conf.components.styles.result.file;
 
@@ -162,6 +196,14 @@ gulp.task('component.styles.dist', function () {
     .pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest(conf.components.root));
 });
+
+gulp.task('component.styles.batch', function () {
+  runSequence('component.styles.build', 'component.styles.dist');
+});
+
+
+// Scripts
+// -------------------------------------
 
 gulp.task('component.scripts.build', function() {
   let src = conf.components.scripts.source.file;
@@ -203,32 +245,9 @@ gulp.task('component.scripts.build', function() {
   }
 });
 
+// Component full build
+// -------------------------------------
 
-// WATCHERS
-// =====================================
-
-gulp.task('watch', function() {
-  console.log('Start watching for styles');
-
-  // Rebuild styles on change
-
-  let style_watcher = gulp.watch(conf.source.styles.dir+'**', ['styler']);
-  style_watcher.on('change', function(event) {
-    console.log('Stylesheet ' + event.path + ' was ' + event.type + ', rebuild...');
-  });
-
-  // Rebuild templates on change
-
-  let template_watcher = gulp.watch(conf.source.templates.dir + "**", ['jade']);
-  template_watcher.on('change', function(event) {
-    console.log('Template ' + event.path + ' was ' + event.type + ', rebuild...');
-  });
-});
-
-
-// BATCH TASKS
-// =====================================
-// main task
-gulp.task('default', function () {
-  runSequence(['styles.batch', 'scripts.build', 'templates.build', 'scripts.copylibs']);
+gulp.task('component.build', function () {
+  runSequence(['component.styles.batch', 'component.scripts.build']);
 });
