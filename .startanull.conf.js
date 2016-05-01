@@ -111,6 +111,7 @@ conf.components.mask = conf.components.root + path.sep + "*";
 conf.components.source = conf.components.mask + path.sep + "src";
 conf.components.result = conf.components.mask;
 
+
 conf.components.styles = {};
 conf.components.styles.source = {};
 conf.components.styles.source.dirname = "styles";
@@ -137,19 +138,18 @@ conf.components.scripts.result.dirname = "js";
 conf.components.scripts.result.dir = conf.components.result + path.sep + conf.components.scripts.result.dirname;
 conf.components.scripts.result.filename = "script.js";
 conf.components.scripts.result.file = conf.components.scripts.result.dir + path.sep + conf.components.scripts.result.filename;
-/*
 
-conf.components.source = {};
-conf.components.source.dir = conf.components.mask + path.sep + "src";
-conf.components.source.style = conf.components.source.dir + path.sep + "style.less";
-conf.components.source.script = conf.components.source.dir + path.sep + "script.js";
-conf.components.source.template = conf.components.source.dir + path.sep + "template.jade";
 
-conf.components.result = {};
-conf.components.result.dir = '.';
-conf.components.result.style = conf.components.mask + path.sep + conf.components.result.dir + path.sep + "style.css";
-conf.components.result.script = conf.components.mask + path.sep + conf.components.result.dir + path.sep + "script.js";*/
-//conf.components.source.template = conf.components.source.dir + path.sep + "template.jade";
+conf.components.templates = {};
+
+conf.components.templates.source = {};
+conf.components.templates.source.dirname = "jade";
+conf.components.templates.source.dir = conf.components.source + path.sep + conf.components.templates.source.dirname;
+conf.components.templates.source.file = conf.components.templates.source.dir + path.sep + "*.jade";
+
+conf.components.templates.result = {};
+conf.components.templates.result.dirname = ".";
+conf.components.templates.result.dir = conf.components.result + path.sep + conf.components.templates.result.dirname;
 
 
 // FUNCTIONS

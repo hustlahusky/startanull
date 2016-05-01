@@ -156,7 +156,7 @@ gulp.task('default', function () {
 
 gulp.task('component.styles.build', function() {
   if (!Boolean(conf.components.styles))
-    return console.error("Components is disabled");
+    return console.error("Component styles is disabled");
 
   let style = conf.components.styles.source.file;
 
@@ -187,7 +187,7 @@ gulp.task('component.styles.build', function() {
 
 gulp.task('component.styles.dist', function () {
   if (!Boolean(conf.components.styles))
-    return console.error("Components is disabled");
+    return console.error("Component styles is disabled");
   
   let src = conf.components.styles.result.file;
 
@@ -231,7 +231,7 @@ gulp.task('component.styles.batch', function () {
 
 gulp.task('component.scripts.build', function() {
   if (!Boolean(conf.components.scripts))
-    return console.error("Components is disabled");
+    return console.error("Component scripts is disabled");
   
   let src = conf.components.scripts.source.file;
 
@@ -270,6 +270,40 @@ gulp.task('component.scripts.build', function() {
   } catch (err) {
     return console.error(err);
   }
+});
+
+// Template
+// -------------------------------------
+
+gulp.task('component.templates.build', function() {
+  if (!Boolean(conf.components.templates))
+    return console.error("Component templates is disabled");
+
+  let src = conf.components.templates.source.file;
+
+  if (argv.component) {
+    src = src.replace("*", argv.component);
+
+    try {
+      let files = glob.sync(src);
+    } catch (err) {
+      return console.error(err);
+    }
+  }
+
+  return gulp.src(src)
+    .pipe(jade({
+      pretty: true
+    }))
+    .pipe(rename(function(filepath) {
+      if (argv.component)
+        filepath.dirname = argv.component;
+      else
+        filepath.dirname = filepath.dirname.split(path.sep)[0];
+
+      filepath.dirname = filepath.dirname + path.sep + conf.components.templates.result.dirname;
+    }))
+    .pipe(gulp.dest(conf.components.root))
 });
 
 // Component full build
