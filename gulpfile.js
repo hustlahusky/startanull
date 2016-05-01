@@ -118,22 +118,61 @@ gulp.task('templates.build', function() {
 // WATCHERS
 // -------------------------------------
 
+// gulp watch [options]
+//   -s - for styles
+//   -j - for scripts
+//   -t - for templates
+//   if no options passed - all
 gulp.task('watch', function() {
-  console.log('Start watching for styles');
+
+  let opts = JSON.parse(JSON.stringify(argv));
+  delete opts._;
+  delete opts.$0;
+
+  // If no options, set all to true
+  if (conf.funcs.isEmpty(opts)) {
+    opts.s = Boolean(conf.styles.source);
+    opts.j = Boolean(conf.scripts);
+    opts.t = Boolean(conf.templates);
+  }
 
   // Rebuild styles on change
+  if (opts.s) {
+    if (!Boolean(conf.styles.source))
+      return console.error("Styles build from sources is disabled");
 
-  let style_watcher = gulp.watch(conf.source.styles.dir+'**', ['styler']);
-  style_watcher.on('change', function(event) {
-    console.log('Stylesheet ' + event.path + ' was ' + event.type + ', rebuild...');
-  });
+    let style_watcher = gulp.watch(conf.styles.source.dir + path.sep + '**', ['styles.build']);
+    style_watcher.on('change', function (event) {
+      console.log('Stylesheet ' + event.path + ' was ' + event.type + ', rebuild...');
+    });
+  }
 
   // Rebuild templates on change
+  if (opts.t) {
+    if (!Boolean(conf.templates))
+      return console.error("Templates is disabled");
 
-  let template_watcher = gulp.watch(conf.source.templates.dir + "**", ['jade']);
-  template_watcher.on('change', function(event) {
-    console.log('Template ' + event.path + ' was ' + event.type + ', rebuild...');
-  });
+    let template_watcher = gulp.watch(conf.templates.source.dir + path.sep + "**", ['templates.build']);
+    template_watcher.on('change', function (event) {
+      console.log('Template ' + event.path + ' was ' + event.type + ', rebuild...');
+    });
+  }
+
+  // webpack watch
+  if (opts.j) {
+    if (!Boolean(conf.scripts))
+      return console.error("Scripts is disabled");
+
+    let src = conf.scripts.source.file;
+
+    let webpack_config = JSON.parse(JSON.stringify(conf.scripts.webpack));
+    webpack_config.watch = true;
+
+    gulp.src(src)
+      .pipe(webpack(webpack_config))
+      .pipe(gulp.dest(conf.scripts.result.dir));
+  }
+
 });
 
 
@@ -188,7 +227,7 @@ gulp.task('component.styles.build', function() {
 gulp.task('component.styles.dist', function () {
   if (!Boolean(conf.components.styles))
     return console.error("Component styles is disabled");
-  
+
   let src = conf.components.styles.result.file;
 
   if (argv.component) {
@@ -232,7 +271,7 @@ gulp.task('component.styles.batch', function () {
 gulp.task('component.scripts.build', function() {
   if (!Boolean(conf.components.scripts))
     return console.error("Component scripts is disabled");
-  
+
   let src = conf.components.scripts.source.file;
 
   if (argv.component) {
@@ -312,6 +351,122 @@ gulp.task('component.templates.build', function() {
 gulp.task('component.build', function () {
   if (!Boolean(conf.components))
     return console.error("Components is disabled");
-  
+
   runSequence(['component.styles.batch', 'component.scripts.build']);
+});
+
+// WATCHERS
+// -------------------------------------
+
+// gulp component.watch [options] [--component]
+//   -s - for styles
+//   -j - for scripts
+//   -t - for templates
+//   if no options passed - all
+gulp.task('component.watch', function() {
+  if (!Boolean(conf.components))
+    return console.error("Components is disabled");
+  
+  let opts = JSON.parse(JSON.stringify(argv));
+  delete opts._;
+  delete opts.$0;
+
+  // If no options, set all to true
+  if (conf.funcs.isEmpty(opts)) {
+    opts.s = Boolean(conf.components.styles.source);
+    opts.j = Boolean(conf.components.scripts);
+    opts.t = Boolean(conf.components.templates);
+  }
+
+  // Rebuild styles on change
+  if (opts.s) {
+    if (!Boolean(conf.components.styles.source))
+      return console.error("Styles build from sources is disabled");
+
+    let style = conf.components.styles.source.dir;
+
+    if (argv.component) {
+      style = style.replace("*", argv.component);
+
+      try {
+        let stats = fs.statSync(style);
+      } catch (err) {
+        return console.error(err);
+      }
+    }
+
+    let style_watcher = gulp.watch(style + path.sep + '**', ['component.styles.build']);
+    style_watcher.on('change', function (event) {
+      console.log('Stylesheet ' + event.path + ' was ' + event.type + ', rebuild...');
+    });
+  }
+
+  // Rebuild templates on change
+  if (opts.t) {
+    if (!Boolean(conf.components.templates))
+      return console.error("Templates is disabled");
+
+    let template = conf.components.templates.source.dir;
+
+    if (argv.component) {
+      template = template.replace("*", argv.component);
+
+      try {
+        let files = glob.sync(template);
+      } catch (err) {
+        return console.error(err);
+      }
+    }
+
+    let template_watcher = gulp.watch(template + path.sep + "**", ['component.templates.build']);
+    template_watcher.on('change', function (event) {
+      console.log('Template ' + event.path + ' was ' + event.type + ', rebuild...');
+    });
+  }
+
+  // webpack watch
+  if (opts.j) {
+    if (!Boolean(conf.components.scripts))
+      return console.error("Scripts is disabled");
+
+    let src = conf.components.scripts.source.file;
+
+    if (argv.component) {
+      src = src.replace("*", argv.component);
+
+      try {
+        let stats = fs.statSync(src);
+      } catch (err) {
+        return console.error(err);
+      }
+    }
+
+    let webpackOptions = JSON.parse(JSON.stringify(conf.scripts.webpack));
+    webpackOptions.output.filename = conf.components.scripts.result.filename;
+    webpackOptions.watch = true;
+
+    try {
+      let files = glob.sync(src);
+
+      files.forEach(function (item) {
+        item = path.resolve(item);
+
+        let breakpoint = conf.components.source.split("*");
+        breakpoint[0] = breakpoint[0].length;
+        breakpoint[1] = item.indexOf(breakpoint[1]);
+
+        let component = item.substring(breakpoint[0], breakpoint[1]);
+
+        gulp.src(item)
+          .pipe(webpack(webpackOptions))
+          .pipe(rename(function(filepath) {
+            filepath.dirname = component + path.sep + conf.components.scripts.result.dirname;
+          }))
+          .pipe(gulp.dest(conf.components.root));
+      });
+    } catch (err) {
+      return console.error(err);
+    }
+  }
+
 });
