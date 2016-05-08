@@ -92,7 +92,7 @@ gulp.task('scripts.copylibs', function() {
 
   for (let lib in conf.scripts.libs)
     if (conf.scripts.libs.hasOwnProperty(lib))
-      conf.funcs.copyLib(lib);
+      conf.funcs.copyLib(lib, gulp);
 });
 
 
@@ -366,7 +366,7 @@ gulp.task('component.build', function () {
 gulp.task('component.watch', function() {
   if (!Boolean(conf.components))
     return console.error("Components is disabled");
-  
+
   let opts = JSON.parse(JSON.stringify(argv));
   delete opts._;
   delete opts.$0;

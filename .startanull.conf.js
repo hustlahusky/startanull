@@ -23,15 +23,7 @@ conf.result.root = path.resolve(__dirname, "assets");
 // =====================================
 
 conf.bower = {};
-try {
-  var bowerConfig = fse.readJsonSync("./.bowerrc", {throws: false});
-
-  if (bowerConfig)
-    conf.bower = JSON.parse(JSON.stringify(bowerConfig));
-} catch (err) {}
-
-if (typeof conf.bower.directory == "undefined")
-  conf.bower.directory = path.resolve(conf.source.root, "bower_components");
+conf.bower.directory = path.resolve(conf.source.root, "bower_components");
 
 
 // STYLES
@@ -85,7 +77,11 @@ conf.scripts.webpack.output.filename = conf.scripts.result.filename;
 
 // LIBS
 conf.scripts.libs = {
-  jquery: path.resolve(conf.bower.directory, "jquery/dist")
+  jquery: path.resolve(conf.bower.directory, "jquery/dist")  + path.sep + "**",
+  test: [
+    path.resolve(conf.bower.directory, "jquery/dist") + path.sep + "jquery.js",
+    path.resolve(conf.bower.directory, "jquery/dist") + path.sep + "jquery.slim.js",
+  ]
 };
 
 
@@ -161,19 +157,26 @@ conf.funcs = {};
 
 // copyLib
 // copy library from conf.scripts.libs to conf.scripts.result.dir
-conf.funcs.copyLib = function (lib) {
-  fs.stat(conf.scripts.libs[lib], function (err, stats) {
-    if (err) return console.error(err);
+conf.funcs.copyLib = function (lib, gulp) {
+  let library;
+  let dest;
 
-    if (stats.isDirectory()) {
-      fse.copy(conf.scripts.libs[lib], conf.scripts.result.dir + path.sep + lib, function (err) {
-        if (err) return console.error(err);
-      });
-    } else if (stats.isFile()) {
-      // TODO: Copy file to conf.result.scripts.dir
-      console.log("File");
-    }
-  });
+  // Check for gulp
+  if (!gulp) return console.error("Gulp instance not provided");
+
+  // Set library and dest
+  if (conf.scripts.libs.hasOwnProperty(lib)) {
+    library = conf.scripts.libs[lib];
+    dest = lib;
+  } else {
+    return console.error("library not exist!");
+  }
+
+  // Copy files
+  return gulp.src(library, {
+      dot: true
+    })
+    .pipe(gulp.dest(path.resolve(conf.scripts.result.dir, dest)));
 };
 
 // Check is obj empty
