@@ -1,6 +1,6 @@
 {
   "name": "startanull",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Gulp tasks for new project",
   "main": "index.js",
   "scripts": {
@@ -14,8 +14,6 @@
   "license": "MIT",
   "devDependencies": {
     "es6-promise": "^3.0.2",
-    "fs-extra": "^0.30.0",
-    "glob": "^7.0.3",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-csscomb": "^3.0.6",
