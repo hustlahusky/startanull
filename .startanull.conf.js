@@ -47,6 +47,11 @@ conf.styles.result.dir = path.resolve(conf.result.root, "css");
 conf.styles.result.filename = "style.css";
 conf.styles.result.file = conf.styles.result.dir + path.sep + conf.styles.result.filename;
 
+conf.styles.sourcemaps = {
+  includeContent: true,
+  sourceRoot: '../../' + conf.styles.source.dir
+};
+
 
 // SCRIPTS
 // =====================================
@@ -90,7 +95,10 @@ conf.templates = {};
 conf.templates.source = {};
 conf.templates.source.dir = path.resolve(conf.source.root, "jade");
 conf.templates.source.file = conf.templates.source.dir + path.sep + "*.jade";
-conf.templates.source.locals = {};
+conf.templates.source.options = {
+  locals: {},
+  pretty: true
+};
 
 conf.templates.result = {};
 conf.templates.result.dir = conf.result.root;
@@ -141,6 +149,7 @@ conf.components.templates.source = {};
 conf.components.templates.source.dirname = "jade";
 conf.components.templates.source.dir = conf.components.source + path.sep + conf.components.templates.source.dirname;
 conf.components.templates.source.file = conf.components.templates.source.dir + path.sep + "*.jade";
+conf.components.templates.source.options = conf.templates.source.options;
 
 conf.components.templates.result = {};
 conf.components.templates.result.dirname = ".";
@@ -198,7 +207,7 @@ conf.funcs.isEmpty = function (obj) {
 
 // CUSTOM INJECTION
 // =====================================
-// conf.styles = false;
+// conf.styles = false; // disable styles
 
 
 // EXPORT

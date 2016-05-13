@@ -4,4 +4,4 @@ var Hello = require('./hello');
 
 Hello.run();
 Hello.err();
-Hello.err("Crash!");
+Hello.err('Crash!');

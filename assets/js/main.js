@@ -50,23 +50,23 @@
 
 	Hello.run();
 	Hello.err();
-	Hello.err("Crash!");
+	Hello.err('Crash!');
 
 
 /***/ },
 /* 1 */
 /***/ function(module, exports) {
 
-	module.exports = (function () {
+	module.exports = (function() {
 	  return {
-	    run: function () {
-	      console.log("Hello, world!");
+	    run: function() {
+	      console.log('Hello, world!');
 	    },
 
-	    err: function (err) {
-	      console.error(err || "Some error");
+	    err: function(err) {
+	      console.error(err || 'Some error');
 	    }
-	  }
+	  };
 	})();
 
 

@@ -1,11 +1,11 @@
-module.exports = (function () {
+module.exports = (function() {
   return {
-    run: function () {
-      console.log("Hello, world!");
+    run: function() {
+      console.log('Hello, world!');
     },
 
-    err: function (err) {
-      console.error(err || "Some error");
+    err: function(err) {
+      console.error(err || 'Some error');
     }
-  }
+  };
 })();

@@ -45,8 +45,8 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-	  init: function () {
-	    console.log("Hello, world 1");
+	  init: function() {
+	    console.log('Hello, world 1');
 	  }
 	};
 

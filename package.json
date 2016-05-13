@@ -1,6 +1,6 @@
 {
   "name": "startanull",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Gulp tasks for new project",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,8 @@
     "gulp-sourcemaps": "^1.6.0",
     "run-sequence": "^1.1.5",
     "webpack-stream": "^3.1.0",
-    "yargs": "^4.6.0"
+    "yargs": "^4.6.0",
+    "eslint": "^2.7.0",
+    "eslint-config-google": "^0.5.0"
   }
 }
