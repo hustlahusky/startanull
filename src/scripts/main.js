@@ -1,6 +1,4 @@
-'use strict';
-
-var Hello = require('./hello');
+import Hello from './hello';
 
 Hello.run();
 Hello.err();

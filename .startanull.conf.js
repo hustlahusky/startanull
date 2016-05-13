@@ -69,13 +69,20 @@ conf.scripts.result.file = conf.scripts.result.dir + path.sep + conf.scripts.res
 
 // WEBPACK
 conf.scripts.webpack = {};
-
-/*conf.scripts.webpack.entry = {};
-conf.scripts.webpack.app = conf.scripts.source.file;*/
-
 conf.scripts.webpack.output = {};
-// conf.scripts.webpack.output.path = conf.scripts.result.dir;
 conf.scripts.webpack.output.filename = conf.scripts.result.filename;
+conf.scripts.webpack.module = {
+  loaders: [
+    {
+      test: /\.jsx?$/,
+      exclude: /(node_modules|bower_components)/,
+      loader: 'babel',
+      query: {
+        presets: ['es2015']
+      }
+    }
+  ]
+};
 
 // LIBS
 conf.scripts.libs = {

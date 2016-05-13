@@ -1,10 +1,10 @@
-module.exports = (function() {
+export default (() => {
   return {
-    run: function() {
+    run: () => {
       console.log('Hello, world!');
     },
 
-    err: function(err) {
+    err: (err) => {
       console.error(err || 'Some error');
     }
   };

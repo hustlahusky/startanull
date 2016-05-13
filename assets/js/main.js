@@ -46,29 +46,37 @@
 
 	'use strict';
 
-	var Hello = __webpack_require__(1);
+	var _hello = __webpack_require__(1);
 
-	Hello.run();
-	Hello.err();
-	Hello.err('Crash!');
+	var _hello2 = _interopRequireDefault(_hello);
 
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	_hello2.default.run();
+	_hello2.default.err();
+	_hello2.default.err('Crash!');
 
 /***/ },
 /* 1 */
 /***/ function(module, exports) {
 
-	module.exports = (function() {
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	exports.default = function () {
 	  return {
-	    run: function() {
+	    run: function run() {
 	      console.log('Hello, world!');
 	    },
 
-	    err: function(err) {
-	      console.error(err || 'Some error');
+	    err: function err(_err) {
+	      console.error(_err || 'Some error');
 	    }
 	  };
-	})();
-
+	}();
 
 /***/ }
 /******/ ]);
