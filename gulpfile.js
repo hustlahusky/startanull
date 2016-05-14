@@ -49,6 +49,7 @@ gulp.task('styles.dist', function() {
   let src = conf.styles.result.file;
 
   return gulp.src(src)
+    .pipe(sourcemaps.init())
     // add prefixes
     .pipe(autoprefixer(conf.styles.autoprefixer))
     // ccscomb
@@ -57,6 +58,7 @@ gulp.task('styles.dist', function() {
     // minify css
     .pipe(cssnano())
     .pipe(rename({suffix: '.min'}))
+    .pipe(sourcemaps.write('.', conf.styles.sourcemaps))
     .pipe(gulp.dest(conf.styles.result.dir));
 });
 

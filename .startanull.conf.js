@@ -49,7 +49,7 @@ conf.styles.result.file = conf.styles.result.dir + path.sep + conf.styles.result
 
 conf.styles.sourcemaps = {
   includeContent: true,
-  sourceRoot: '../../' + conf.styles.source.dir
+  sourceRoot: path.relative(conf.styles.result.dir, conf.styles.source.dir)
 };
 
 
