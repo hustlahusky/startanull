@@ -1,13 +1,13 @@
 'use strict';
 
-require('es6-promise').polyfill();
 // =====================================
 // DEPENDENCIES
 // =====================================
+require('es6-promise').polyfill();
 const gulp = require('gulp');
 const path = require('path');
 const autoprefixer = require('gulp-autoprefixer');
-const csscomb = require('gulp-csscomb');
+const _ = require('underscore');
 const cssnano = require('gulp-cssnano');
 const rename = require('gulp-rename');
 const sourcemaps = require('gulp-sourcemaps');
@@ -49,16 +49,11 @@ gulp.task('styles.dist', function() {
   let src = conf.styles.result.file;
 
   return gulp.src(src)
-    .pipe(sourcemaps.init())
     // add prefixes
     .pipe(autoprefixer(conf.styles.autoprefixer))
-    // ccscomb
-    .pipe(csscomb())
-    .pipe(gulp.dest(conf.styles.result.dir))
     // minify css
     .pipe(cssnano())
     .pipe(rename({suffix: '.min'}))
-    .pipe(sourcemaps.write('.', conf.styles.sourcemaps))
     .pipe(gulp.dest(conf.styles.result.dir));
 });
 
@@ -122,12 +117,12 @@ gulp.task('templates.build', function() {
 //   -t - for templates
 //   if no options passed - all
 gulp.task('watch', function() {
-  let opts = JSON.parse(JSON.stringify(argv));
+  let opts = _.clone(argv);
   delete opts._;
   delete opts.$0;
 
   // If no options, set all to true
-  if (conf.funcs.isEmpty(opts)) {
+  if (_.isEmpty(opts)) {
     opts.s = Boolean(conf.styles.source);
     opts.j = Boolean(conf.scripts);
     opts.t = Boolean(conf.templates);
@@ -170,7 +165,7 @@ gulp.task('watch', function() {
 
     let src = conf.scripts.source.file;
 
-    let webpackConfig = JSON.parse(JSON.stringify(conf.scripts.webpack));
+    let webpackConfig = _.clone(conf.scripts.webpack);
     webpackConfig.watch = true;
 
     gulp.src(src)
@@ -242,8 +237,6 @@ gulp.task('component.styles.dist', function() {
     return gulp.src(src)
       // add prefixes
       .pipe(autoprefixer(conf.styles.autoprefixer))
-      // ccscomb
-      .pipe(csscomb())
       .pipe(rename(function(filepath) {
         if (argv.component)
           filepath.dirname = argv.component;
@@ -281,7 +274,7 @@ gulp.task('component.scripts.build', function() {
   glob(src, {dot: true}, function(err, files) {
     if (err) return console.error(err);
 
-    let webpackOptions = JSON.parse(JSON.stringify(conf.scripts.webpack));
+    let webpackOptions = _.clone(conf.scripts.webpack);
     webpackOptions.output.filename = conf.components.scripts.result.filename;
 
     files.forEach(function(item) {
@@ -357,12 +350,12 @@ gulp.task('component.watch', function() {
   if (!conf.components)
     return console.error('Components is disabled');
 
-  let opts = JSON.parse(JSON.stringify(argv));
+  let opts = _.clone(argv);
   delete opts._;
   delete opts.$0;
 
   // If no options, set all to true
-  if (conf.funcs.isEmpty(opts)) {
+  if (_.isEmpty(opts)) {
     opts.s = Boolean(conf.components.styles.source);
     opts.j = Boolean(conf.components.scripts);
     opts.t = Boolean(conf.components.templates);
@@ -429,7 +422,7 @@ gulp.task('component.watch', function() {
     glob(src, {dot: true}, function(err, files) {
       if (err) return console.error(err);
 
-      let webpackOptions = JSON.parse(JSON.stringify(conf.scripts.webpack));
+      let webpackOptions = _.clone(conf.scripts.webpack);
       webpackOptions.output.filename = conf.components.scripts.result.filename;
       webpackOptions.watch = true;
 

@@ -71,6 +71,8 @@ conf.scripts.result.file = conf.scripts.result.dir + path.sep + conf.scripts.res
 conf.scripts.webpack = {};
 conf.scripts.webpack.output = {};
 conf.scripts.webpack.output.filename = conf.scripts.result.filename;
+// conf.scripts.webpack.output.sourceMapFilename = conf.scripts.result.filename + '.map';
+// conf.scripts.webpack.devtool = 'cheap-source-map';
 conf.scripts.webpack.module = {
   loaders: [
     {
@@ -190,25 +192,6 @@ conf.funcs.copyLib = function (lib, gulp) {
       dot: true
     })
     .pipe(gulp.dest(path.resolve(conf.scripts.result.dir, dest)));
-};
-
-// Check is obj empty
-conf.funcs.isEmpty = function (obj) {
-
-  // null and undefined are "empty"
-  if (obj == null) return true;
-
-  // Assume if it has a length property with a non-zero value
-  // that that property is correct.
-  if (obj.length > 0)    return false;
-  if (obj.length === 0)  return true;
-
-  // Otherwise, does it have any properties of its own?
-  for (let key in obj) {
-    if (hasOwnProperty.call(obj, key)) return false;
-  }
-
-  return true;
 };
 
 

@@ -44,12 +44,16 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	module.exports = {
-	  init: function() {
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = {
+	  init: function init() {
 	    console.log('Hello, world 1');
 	  }
 	};
-
 
 /***/ }
 /******/ ]);
