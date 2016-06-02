@@ -1,8 +1,5 @@
 'use strict';
 
-// =====================================
-// DEPENDENCIES
-// =====================================
 require('es6-promise').polyfill();
 const gulp = require('gulp');
 const path = require('path');
@@ -16,7 +13,7 @@ const jade = require('gulp-jade');
 const runSequence = require('run-sequence');
 const argv = require('yargs').argv;
 const glob = require('glob');
-const conf = require('./.startanull.conf');
+const conf = require('./startanull-conf.js');
 
 
 // =====================================
@@ -350,12 +347,20 @@ gulp.task('component.watch', function() {
   if (!conf.components)
     return console.error('Components is disabled');
 
-  let opts = _.clone(argv);
-  delete opts._;
-  delete opts.$0;
+  let opts = {
+    s: argv.s,
+    j: argv.j,
+    t: argv.t
+  };
+
+  let component = false;
+  if (argv.component) {
+    component = argv.component;
+    delete opts.component;
+  }
 
   // If no options, set all to true
-  if (_.isEmpty(opts)) {
+  if (_.isEmpty(_.without(_.values(opts), undefined))) {
     opts.s = Boolean(conf.components.styles.source);
     opts.j = Boolean(conf.components.scripts);
     opts.t = Boolean(conf.components.templates);
@@ -368,8 +373,8 @@ gulp.task('component.watch', function() {
 
     let style = conf.components.styles.source.dir;
 
-    if (argv.component)
-      style = style.replace('*', argv.component);
+    if (component)
+      style = style.replace('*', component);
 
     glob(style, {dot: true}, function(err) {
       if (err) return console.error(err);
@@ -392,8 +397,8 @@ gulp.task('component.watch', function() {
 
     let template = conf.components.templates.source.dir;
 
-    if (argv.component)
-      template = template.replace('*', argv.component);
+    if (component)
+      template = template.replace('*', component);
 
     glob(template, {dot: true}, function(err) {
       if (err) return console.error(err);
@@ -416,8 +421,8 @@ gulp.task('component.watch', function() {
 
     let src = conf.components.scripts.source.file;
 
-    if (argv.component)
-      src = src.replace('*', argv.component);
+    if (component)
+      src = src.replace('*', component);
 
     glob(src, {dot: true}, function(err, files) {
       if (err) return console.error(err);

@@ -51,7 +51,7 @@
 	});
 	exports.default = {
 	  init: function init() {
-	    console.log('Hello, world 1');
+	    console.log('Hello, world');
 	  }
 	};
 
