@@ -8,12 +8,14 @@ const _ = require('underscore');
 const cssnano = require('gulp-cssnano');
 const rename = require('gulp-rename');
 const sourcemaps = require('gulp-sourcemaps');
-const webpack = require('webpack-stream');
+const webpackStream = require('webpack-stream');
+const webpack = require('webpack');
 const jade = require('gulp-jade');
 const runSequence = require('run-sequence');
 const argv = require('yargs').argv;
 const glob = require('glob');
 const gm = require('gulp-gm');
+const browserSync = require('browser-sync').create();
 const conf = require('./startanull-conf.js');
 
 
@@ -67,15 +69,36 @@ gulp.task('styles.batch', function() {
 // SCRIPTS
 // -------------------------------------
 
-// webpack js build
+// webpackStream js build
 gulp.task('scripts.build', function() {
   if (!conf.scripts)
     return console.error('Scripts is disabled');
 
   let src = conf.scripts.source.file;
 
+  let webpackOptions = _.clone(conf.scripts.webpack);
+  // Minified file
+  webpackOptions.output.filename =
+    conf.scripts.result.filename.split('.js')[0] + '.min.js';
+
+  // Sourcemap
+  webpackOptions.output.sourceMapFilename =
+    webpackOptions.output.filename + '.map';
+
+  // Add UglifyJS plugin
+  if (_.isEmpty(webpackOptions.plugins))
+    webpackOptions.plugins = [];
+
+  webpackOptions.plugins.push(
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
+    })
+  );
+
   return gulp.src(src)
-    .pipe(webpack(conf.scripts.webpack))
+    .pipe(webpackStream(webpackOptions))
     .pipe(gulp.dest(conf.scripts.result.dir));
 });
 
@@ -183,7 +206,7 @@ gulp.task('watch', function() {
     });
   }
 
-  // webpack watch
+  // webpackStream watch
   if (opts.j) {
     if (!conf.scripts)
       return console.error('Scripts is disabled');
@@ -194,9 +217,22 @@ gulp.task('watch', function() {
     webpackConfig.watch = true;
 
     gulp.src(src)
-      .pipe(webpack(webpackConfig))
+      .pipe(webpackStream(webpackConfig))
       .pipe(gulp.dest(conf.scripts.result.dir));
   }
+});
+
+
+// BROWSER-SYNC
+// -------------------------------------
+
+gulp.task('serve', function() {
+  browserSync.init(conf.browserSync);
+
+  gulp.watch([
+    conf.result + path.sep + '**',
+    '!' + conf.source + path.sep + '**'
+  ]).on('change', browserSync.reload);
 });
 
 
@@ -206,7 +242,11 @@ gulp.task('watch', function() {
 // build main
 gulp.task('default', function() {
   runSequence([
-    'styles.batch', 'scripts.build', 'templates.build', 'scripts.copylibs'
+    'styles.batch',
+    'scripts.build',
+    'templates.build',
+    'scripts.copylibs',
+    'images'
   ]);
 });
 
@@ -302,6 +342,17 @@ gulp.task('component.scripts.build', function() {
     let webpackOptions = _.clone(conf.scripts.webpack);
     webpackOptions.output.filename = conf.components.scripts.result.filename;
 
+    if (_.isEmpty(webpackOptions.plugins))
+      webpackOptions.plugins = [];
+
+    webpackOptions.plugins.push(
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          warnings: false
+        }
+      })
+    );
+
     files.forEach(function(item) {
       item = path.resolve(item);
 
@@ -312,7 +363,7 @@ gulp.task('component.scripts.build', function() {
       let component = item.substring(breakpoint[0], breakpoint[1]);
 
       gulp.src(item)
-        .pipe(webpack(webpackOptions))
+        .pipe(webpackStream(webpackOptions))
         .pipe(rename(function(filepath) {
           filepath.dirname =
             component + path.sep + conf.components.scripts.result.dirname;
@@ -442,7 +493,7 @@ gulp.task('component.watch', function() {
     });
   }
 
-  // webpack watch
+  // webpackStream watch
   if (opts.j) {
     if (!conf.components.scripts)
       return console.error('Scripts is disabled');
@@ -469,7 +520,7 @@ gulp.task('component.watch', function() {
         let component = item.substring(breakpoint[0], breakpoint[1]);
 
         gulp.src(item)
-          .pipe(webpack(webpackOptions))
+          .pipe(webpackStream(webpackOptions))
           .pipe(rename(function(filepath) {
             filepath.dirname =
               component + path.sep + conf.components.scripts.result.dirname;

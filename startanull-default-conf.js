@@ -9,18 +9,22 @@ const conf = {};
 // PATHS
 // =====================================
 
-conf.source = {};
-conf.source.root = path.resolve(__dirname, 'src');
-
-conf.result = {};
-conf.result.root = path.resolve(__dirname, 'assets');
+conf.source = path.resolve(__dirname, 'src');
+conf.result = path.resolve(__dirname, 'assets');
 
 
 // BOWER
 // =====================================
 
 conf.bower = {};
-conf.bower.directory = path.resolve(conf.source.root, 'bower_components');
+conf.bower.directory = path.resolve(conf.source, 'bower_components');
+
+
+// BROWSER-SYNC
+// =====================================
+conf.browserSync = {
+  server: conf.result
+};
 
 
 // STYLES
@@ -38,12 +42,12 @@ conf.styles.autoprefixer = {
 };
 
 conf.styles.source = {};
-conf.styles.source.dir = path.resolve(conf.source.root, 'styles');
+conf.styles.source.dir = path.resolve(conf.source, 'styles');
 conf.styles.source.filename = 'style.less';
 conf.styles.source.file = conf.styles.source.dir + path.sep + conf.styles.source.filename;
 
 conf.styles.result = {};
-conf.styles.result.dir = path.resolve(conf.result.root, 'css');
+conf.styles.result.dir = path.resolve(conf.result, 'css');
 conf.styles.result.filename = 'style.css';
 conf.styles.result.file = conf.styles.result.dir + path.sep + conf.styles.result.filename;
 
@@ -58,12 +62,12 @@ conf.styles.sourcemaps = {
 
 conf.scripts = {};
 conf.scripts.source = {};
-conf.scripts.source.dir = path.resolve(conf.source.root, 'scripts');
+conf.scripts.source.dir = path.resolve(conf.source, 'scripts');
 conf.scripts.source.filename = 'main.js';
 conf.scripts.source.file = conf.scripts.source.dir + path.sep + conf.scripts.source.filename;
 
 conf.scripts.result = {};
-conf.scripts.result.dir = path.resolve(conf.result.root, 'js');
+conf.scripts.result.dir = path.resolve(conf.result, 'js');
 conf.scripts.result.filename = 'main.js';
 conf.scripts.result.file = conf.scripts.result.dir + path.sep + conf.scripts.result.filename;
 
@@ -96,7 +100,7 @@ conf.scripts.libs = {};
 conf.templates = {};
 
 conf.templates.source = {};
-conf.templates.source.dir = path.resolve(conf.source.root, 'jade');
+conf.templates.source.dir = path.resolve(conf.source, 'jade');
 conf.templates.source.file = conf.templates.source.dir + path.sep + '*.jade';
 conf.templates.source.options = {
   locals: {},
@@ -104,14 +108,14 @@ conf.templates.source.options = {
 };
 
 conf.templates.result = {};
-conf.templates.result.dir = conf.result.root;
+conf.templates.result.dir = conf.result;
 
 
 // IMAGES
 // =====================================
 conf.img = {};
-conf.img.source = path.resolve(conf.source.root, 'img');
-conf.img.result = path.resolve(conf.result.root, 'img');
+conf.img.source = path.resolve(conf.source, 'img');
+conf.img.result = path.resolve(conf.result, 'img');
 conf.img.opts = {imageMagick: true};
 conf.img.rules = {
   default: {

@@ -10,7 +10,14 @@ const path = require('path');
  * Rewrite any options you want in this file
  */
 
+// Disable something
 // conf.styles = false; // disable styles
+
+// Change Less to Sass
+// npm i --save-dev gulp-sass
+// conf.styles.preprocessor.instance = require('gulp-sass');
+// conf.styles.source.filename = 'style.scss';
+// conf.styles.source.file = conf.styles.source.dir + path.sep + conf.styles.source.filename;
 
 // Add JS libraries
 // conf.scripts.libs = _.extend(conf.scripts.libs, {
@@ -22,11 +29,11 @@ const path = require('path');
 // });
 
 // Webpack
-// conf.scripts.webpack.externals = {
+// conf.scripts.webpackStream.externals = {
 //   jquery: '$'
 // };
 //
-// conf.scripts.webpack.devtool = 'eval';
+// conf.scripts.webpackStream.devtool = 'eval';
 
 // Add image processing rules
 
@@ -42,6 +49,11 @@ const path = require('path');
 //         .noProfile()
 //     );
 //   }
+// };
+
+// Change BrowserSync options
+// conf.browserSync = {
+//   proxy: 'startanull.dev'
 // };
 
 module.exports = conf;
