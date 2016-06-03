@@ -71,8 +71,8 @@ conf.scripts.result.file = conf.scripts.result.dir + path.sep + conf.scripts.res
 conf.scripts.webpack = {};
 conf.scripts.webpack.output = {};
 conf.scripts.webpack.output.filename = conf.scripts.result.filename;
-// conf.scripts.webpack.output.sourceMapFilename = conf.scripts.result.filename + '.map';
-// conf.scripts.webpack.devtool = 'cheap-source-map';
+conf.scripts.webpack.output.sourceMapFilename = conf.scripts.result.filename + '.map';
+conf.scripts.webpack.devtool = 'source-map';
 conf.scripts.webpack.module = {
   loaders: [
     {
@@ -87,13 +87,7 @@ conf.scripts.webpack.module = {
 };
 
 // LIBS
-conf.scripts.libs = {
-  jquery: path.resolve(conf.bower.directory, 'jquery/dist') + path.sep + '**',
-  test: [
-    path.resolve(conf.bower.directory, 'jquery/dist') + path.sep + 'jquery.js',
-    path.resolve(conf.bower.directory, 'jquery/dist') + path.sep + 'jquery.slim.js'
-  ]
-};
+conf.scripts.libs = {};
 
 
 // TEMPLATES
@@ -111,6 +105,28 @@ conf.templates.source.options = {
 
 conf.templates.result = {};
 conf.templates.result.dir = conf.result.root;
+
+
+// IMAGES
+// =====================================
+conf.img = {};
+conf.img.source = path.resolve(conf.source.root, 'img');
+conf.img.result = path.resolve(conf.result.root, 'img');
+conf.img.opts = {imageMagick: true};
+conf.img.rules = {
+  default: {
+    glob: 'default/**',
+    proc: function(file, done) {
+      done(
+        null,
+        file
+          .resize(800)
+          .quality(75)
+          .noProfile()
+      );
+    }
+  }
+};
 
 
 // COMPONENTS

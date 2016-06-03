@@ -13,6 +13,7 @@ const jade = require('gulp-jade');
 const runSequence = require('run-sequence');
 const argv = require('yargs').argv;
 const glob = require('glob');
+const gm = require('gulp-gm');
 const conf = require('./startanull-conf.js');
 
 
@@ -102,6 +103,33 @@ gulp.task('templates.build', function() {
   return gulp.src(src)
     .pipe(jade(conf.templates.source.options))
     .pipe(gulp.dest(conf.templates.result.dir));
+});
+
+
+// IMAGES
+// -------------------------------------
+
+// gulp images [--rules=(rules separated with commas)]
+gulp.task('images', function() {
+  if (!conf.img)
+    return console.error('Image processing is disabled');
+
+  let rules = conf.img.rules;
+  if (argv.rules)
+    rules = _.pick(rules, argv.rules.split(','));
+
+  _.each(rules, function(rule, ruleName) {
+    gulp.src(conf.img.source + path.sep + rule.glob)
+      .pipe(
+        gm(
+          function(gmfile, done) {
+            return rule.proc(gmfile, done);
+          },
+          conf.img.opts
+        )
+      )
+      .pipe(gulp.dest(path.resolve(conf.img.result, ruleName)));
+  });
 });
 
 
