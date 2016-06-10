@@ -141,7 +141,7 @@ gulp.task('images', function() {
   if (argv.rules)
     rules = _.pick(rules, argv.rules.split(','));
 
-  _.each(rules, function(rule, ruleName) {
+  _.each(rules, function(rule) {
     gulp.src(conf.img.source + path.sep + rule.glob)
       .pipe(
         gm(
@@ -151,7 +151,7 @@ gulp.task('images', function() {
           conf.img.opts
         )
       )
-      .pipe(gulp.dest(path.resolve(conf.img.result, ruleName)));
+      .pipe(gulp.dest(rule.dest));
   });
 });
 

@@ -120,6 +120,7 @@ conf.img.opts = {imageMagick: true};
 conf.img.rules = {
   default: {
     glob: 'default/**',
+    dest: path.resolve(conf.img.result, 'default'),
     proc: function(file, done) {
       done(
         null,

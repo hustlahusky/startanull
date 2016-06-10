@@ -40,6 +40,7 @@ const path = require('path');
 // See more methods at: http://aheckmann.github.io/gm/docs.html
 // conf.img.rules.slider = {
 //   glob: 'slider/**',
+//   dest: path.resolve(conf.img.result, 'slider'),
 //   proc: function(file, done) {
 //     done(
 //       null,
