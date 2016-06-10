@@ -53,8 +53,14 @@ const path = require('path');
 // };
 
 // Change BrowserSync options
-// conf.browserSync = {
+// conf.browserSync.options = {
 //   proxy: 'startanull.dev'
 // };
+
+// Change glob for BrowserSync reload
+// conf.browserSync.watch = [
+//   __dirname + path.sep + '**',
+//   '!' + conf.source + path.sep + '**'
+// ];
 
 module.exports = conf;

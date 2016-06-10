@@ -227,12 +227,9 @@ gulp.task('watch', function() {
 // -------------------------------------
 
 gulp.task('serve', function() {
-  browserSync.init(conf.browserSync);
+  browserSync.init(conf.browserSync.options);
 
-  gulp.watch([
-    conf.result + path.sep + '**',
-    '!' + conf.source + path.sep + '**'
-  ]).on('change', browserSync.reload);
+  gulp.watch(conf.browserSync.watch).on('change', browserSync.reload);
 });
 
 

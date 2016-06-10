@@ -23,7 +23,14 @@ conf.bower.directory = path.resolve(conf.source, 'bower_components');
 // BROWSER-SYNC
 // =====================================
 conf.browserSync = {
-  server: conf.result
+  options: {
+    server: conf.result
+  },
+
+  watch: [
+    conf.result + path.sep + '**',
+    '!' + conf.source + path.sep + '**'
+  ]
 };
 
 
