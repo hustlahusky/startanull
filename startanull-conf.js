@@ -1,7 +1,7 @@
 'use strict';
 
 const _ = require('underscore');
-const conf = require('./startanull-default-conf');
+const confConstructor = require('./startanull-default-conf');
 const path = require('path');
 
 /**
@@ -9,7 +9,7 @@ const path = require('path');
  *
  * Rewrite any options you want in this file
  */
-
+let conf = confConstructor();
 // Disable something
 // conf.styles = false; // disable styles
 
@@ -29,11 +29,11 @@ const path = require('path');
 // });
 
 // Webpack
-// conf.scripts.webpackStream.externals = {
+// conf.scripts.webpack.externals = {
 //   jquery: '$'
 // };
 //
-// conf.scripts.webpackStream.devtool = 'eval';
+conf.scripts.webpack.devtool = 'eval';
 
 // Add image processing rules
 

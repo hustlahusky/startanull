@@ -15,9 +15,9 @@ const runSequence = require('run-sequence');
 const argv = require('yargs').argv;
 const glob = require('glob');
 const gm = require('gulp-gm');
+const watch = require('gulp-watch');
 const browserSync = require('browser-sync').create();
 const conf = require('./startanull-conf.js');
-
 
 // =====================================
 // MAIN
@@ -181,13 +181,8 @@ gulp.task('watch', function() {
     if (!conf.styles.source)
       return console.error('Styles build from sources is disabled');
 
-    let styleWatcher = gulp.watch(
-      conf.styles.source.dir + path.sep + '**', ['styles.build']
-    );
-    styleWatcher.on('change', function(event) {
-      console.log(
-        'Stylesheet ' + event.path + ' was ' + event.type + ', rebuild...'
-      );
+    watch(conf.styles.source.dir + path.sep + '**', () => {
+      runSequence('styles.build');
     });
   }
 
@@ -196,13 +191,8 @@ gulp.task('watch', function() {
     if (!conf.templates)
       return console.error('Templates is disabled');
 
-    let templateWatcher = gulp.watch(
-      conf.templates.source.dir + path.sep + '**', ['templates.build']
-    );
-    templateWatcher.on('change', function(event) {
-      console.log(
-        'Template ' + event.path + ' was ' + event.type + ', rebuild...'
-      );
+    watch(conf.templates.source.dir + path.sep + '**', () => {
+      runSequence('templates.build');
     });
   }
 
@@ -455,13 +445,8 @@ gulp.task('component.watch', function() {
     glob(style, {dot: true}, function(err) {
       if (err) return console.error(err);
 
-      let styleWatcher = gulp.watch(
-        style + path.sep + '**', ['component.styles.build']
-      );
-      styleWatcher.on('change', function(event) {
-        console.log(
-          'Stylesheet ' + event.path + ' was ' + event.type + ', rebuild...'
-        );
+      watch(style + path.sep + '**', () => {
+        runSequence('component.styles.build');
       });
     });
   }
@@ -479,13 +464,8 @@ gulp.task('component.watch', function() {
     glob(template, {dot: true}, function(err) {
       if (err) return console.error(err);
 
-      let templateWatcher = gulp.watch(
-        template + path.sep + '**', ['component.templates.build']
-      );
-      templateWatcher.on('change', function(event) {
-        console.log(
-          'Template ' + event.path + ' was ' + event.type + ', rebuild...'
-        );
+      watch(template + path.sep + '**', () => {
+        runSequence('component.templates.build');
       });
     });
   }
