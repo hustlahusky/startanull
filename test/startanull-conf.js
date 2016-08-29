@@ -10,16 +10,14 @@ let conf = {};
 conf.globOptions = {dot: true};
 
 // BrowserSync
-conf.browserSync = {
-  options: {
-    server: resDir
-  },
-
-  watch: [
-    resDir + path.sep + '**',
-    '!' + srcDir + path.sep + '**'
-  ]
+conf.browserSyncOpts = {
+  server: resDir
 };
+
+conf.browserSyncWatch = [
+  resDir + path.sep + '**',
+  '!' + srcDir + path.sep + '**'
+];
 
 // Styles
 conf.stylesProc = require('gulp-less');
