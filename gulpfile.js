@@ -57,7 +57,7 @@ gulp.task('styles.build', (cb) => {
 
 
 // Minify CSS
-gulp.task('styles.min', function(cb) {
+gulp.task('styles.min', (cb) => {
   glob(conf.stylesSrc, conf.globOptions, (err, files) => {
     if (err) return cb(err);
 
@@ -84,17 +84,30 @@ gulp.task('styles.min', function(cb) {
 gulp.task('styles', () => runSequence('styles.build', 'styles.min'));
 
 
-// SCRIPTS
-// -------------------------------------
+/**
+ * SCRIPTS
+ * =======================================================
+ */
 
 // Webpack js build
-gulp.task('scripts.build', function() {
-  if (!conf.scripts)
-    return console.error('Scripts is disabled');
+gulp.task('scripts.build', (cb) => {
+  glob(conf.scriptsSrc, conf.globOptions, (err, files) => {
+    if (err) return cb(err);
 
-  let src = conf.scripts.source.file;
+    async.each(files, (file, cb) => {
+      file = path.resolve(file);
 
-  let webpackOptions = _.clone(conf.scripts.webpack);
+      let dest = conf.scriptsDest;
+      if (!dest) dest = path.dirname(file);
+
+      gulp.src(file)
+        .pipe(webpackStream(conf.scriptsWebpack))
+        .pipe(gulp.dest(dest))
+        .on('end', cb);
+    }, (err) => cb(err));
+  });
+
+  /*
   // Minified file
   webpackOptions.output.filename =
     conf.scripts.result.filename.replace('.js', '.min.js');
@@ -113,21 +126,7 @@ gulp.task('scripts.build', function() {
         warnings: false
       }
     })
-  );
-
-  return gulp.src(src)
-    .pipe(webpackStream(webpackOptions))
-    .pipe(gulp.dest(conf.scripts.result.dir));
-});
-
-// copy js libs to assets
-gulp.task('scripts.copylibs', function() {
-  if (!conf.scripts)
-    return console.error('Scripts is disabled');
-
-  for (let lib in conf.scripts.libs)
-    if (conf.scripts.libs.hasOwnProperty(lib))
-      conf.funcs.copyLib(lib, gulp);
+  );*/
 });
 
 
