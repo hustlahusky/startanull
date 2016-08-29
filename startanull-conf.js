@@ -1,15 +1,36 @@
 'use strict';
 
-const _ = require('underscore');
-const confConstructor = require('./startanull-default-conf');
+// const _ = require('underscore');
+// const confConstructor = require('./startanull-default-conf');
 const path = require('path');
+
+let conf = {};
+
+conf.globOptions = {dot: true};
+
+conf.stylesProc = require('gulp-less');
+conf.stylesProcOpts = {};
+
+conf.stylesSrc = path.resolve(__dirname, 'src', 'styles') +
+  path.sep + 'style.less';
+conf.stylesDest = path.resolve(__dirname, 'assets', 'css');
+
+conf.stylesAutoprefixer = {
+  browsers: ['Android 2.3', 'Android >= 4', 'Chrome >= 20', 'Firefox >= 24',
+    'Explorer >= 8', 'iOS >= 6', 'Opera >= 12', 'Safari >= 7'],
+  cascade: false
+};
+conf.stylesMaps = {
+  includeContent: true,
+  // sourceRoot: path.relative(conf.styles.result.dir, conf.styles.source.dir)
+};
 
 /**
  * CUSTOM INJECTION
  *
  * Rewrite any options you want in this file
  */
-let conf = confConstructor();
+// let conf = confConstructor();
 // Disable something
 // conf.styles = false; // disable styles
 

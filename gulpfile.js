@@ -19,51 +19,69 @@ const watch = require('gulp-watch');
 const browserSync = require('browser-sync').create();
 const conf = require('./startanull-conf.js');
 
-// =====================================
-// MAIN
-// =====================================
+const async = require('async');
 
 
-// STYLES
-// -------------------------------------
+/**
+ * STYLES
+ * =======================================================
+ */
 
-// style build
-gulp.task('styles.build', function() {
-  if (!conf.styles.source)
-    return console.error('Styles build from sources is disabled');
+// Build CSS from styles
+gulp.task('styles.build', (cb) => {
+  glob(conf.stylesSrc, conf.globOptions, (err, files) => {
+    if (err) return cb(err);
 
-  let src = conf.styles.source.file;
+    async.each(files, (file, cb) => {
+      file = path.resolve(file);
 
-  return gulp.src(src)
-    .pipe(sourcemaps.init())
-    .pipe(conf.styles.preprocessor.instance(conf.styles.preprocessor.options))
-    .pipe(sourcemaps.write('.', conf.styles.sourcemaps))
-    .pipe(gulp.dest(conf.styles.result.dir));
+      let srcDir = path.dirname(file);
+
+      let dest = conf.stylesDest;
+      if (!dest) dest = srcDir;
+
+      let mapsOptions = _.defaults(conf.stylesMaps, {
+        sourceRoot: path.relative(dest, srcDir)
+      });
+
+      gulp.src(file)
+        .pipe(sourcemaps.init())
+        .pipe(conf.stylesProc(conf.stylesProcOpts))
+        .pipe(autoprefixer(conf.stylesAutoprefixer))
+        .pipe(sourcemaps.write('.', mapsOptions))
+        .pipe(gulp.dest(dest))
+        .on('end', cb);
+    }, (err) => cb(err));
+  });
 });
 
-// style to dist
-gulp.task('styles.dist', function() {
-  if (!conf.styles.result)
-    return console.error('Styles is disabled');
 
-  let src = conf.styles.result.file;
+// Minify CSS
+gulp.task('styles.min', function(cb) {
+  glob(conf.stylesSrc, conf.globOptions, (err, files) => {
+    if (err) return cb(err);
 
-  return gulp.src(src)
-    // add prefixes
-    .pipe(autoprefixer(conf.styles.autoprefixer))
-    // minify css
-    .pipe(cssnano())
-    .pipe(rename({suffix: '.min'}))
-    .pipe(gulp.dest(conf.styles.result.dir));
+    async.each(files, (file, cb) => {
+      file = path.resolve(file);
+
+      let dest = conf.stylesDest;
+      if (!dest) dest = path.dirname(file);
+
+      let ext = path.extname(file);
+      file = dest + path.sep + path.basename(file, ext) + '.css';
+
+      gulp.src(file)
+        .pipe(cssnano())
+        .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest(dest))
+        .on('end', cb);
+    }, (err) => cb(err));
+  });
 });
+
 
 // Build styles
-gulp.task('styles.batch', function() {
-  if (!conf.styles)
-    return console.error('Styles is disabled');
-
-  runSequence('styles.build', 'styles.dist');
-});
+gulp.task('styles', () => runSequence('styles.build', 'styles.min'));
 
 
 // SCRIPTS
