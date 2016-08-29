@@ -10,7 +10,7 @@ const rename = require('gulp-rename');
 const sourcemaps = require('gulp-sourcemaps');
 const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
-const jade = require('gulp-jade');
+const pug = require('gulp-pug');
 const runSequence = require('run-sequence');
 const argv = require('yargs').argv;
 const glob = require('glob');
@@ -130,19 +130,17 @@ gulp.task('scripts.build', (cb) => {
 });
 
 
-// TEMPLATE
-// -------------------------------------
+/**
+ * TEMPLATES
+ * =======================================================
+ */
 
-// jade
-gulp.task('templates.build', function() {
-  if (!conf.templates)
-    return console.error('Templates is disabled');
-
-  let src = conf.templates.source.file;
-
-  return gulp.src(src)
-    .pipe(jade(conf.templates.source.options))
-    .pipe(gulp.dest(conf.templates.result.dir));
+// Build HTML from Pug
+gulp.task('templates.build', (cb) => {
+  gulp.src(conf.templatesSrc)
+    .pipe(pug(conf.templatesPugOpts))
+    .pipe(gulp.dest(conf.templatesDest))
+    .on('end', cb);
 });
 
 

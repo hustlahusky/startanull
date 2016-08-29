@@ -49,6 +49,14 @@ conf.scriptsWebpack.module = {
   ]
 };
 
+// Templates
+conf.templatesSrc = path.resolve(srcDir, 'pug') + path.sep + '*.pug';
+conf.templatesDest = resDir;
+conf.templatesPugOpts = {
+  locals: {},
+  pretty: true
+};
+
 /**
  * CUSTOM INJECTION
  *
