@@ -3,7 +3,6 @@ const _ = require('underscore');
 const async = require('async');
 const path = require('path');
 const glob = require('glob');
-const gulp = require('gulp');
 const autoprefixer = require('gulp-autoprefixer');
 const cssnano = require('gulp-cssnano');
 const rename = require('gulp-rename');
@@ -13,11 +12,13 @@ const gm = require('gulp-gm');
 const watch = require('gulp-watch');
 const webpack = require('webpack');
 const webpackStream = require('webpack-stream');
-const runSequence = require('run-sequence');
 const argv = require('yargs').argv;
 const browserSync = require('browser-sync').create();
 
 module.exports = (conf) => {
+  const gulp = conf.gulp;
+  const runSequence = require('run-sequence').use(gulp);
+
   /**
    * Default
    * -------------------------------------------------------
@@ -198,10 +199,11 @@ module.exports = (conf) => {
   });
 
 
-// IMAGES
-// -------------------------------------
+  // IMAGES
+  // -------------------------------------
 
-// gulp images [--rules=(rules separated with commas)]
+  // gulp images [--rules=(rules separated with commas)]
+  /*
   gulp.task('images', function() {
     if (conf.disableImages) return console.log('Images module disabled');
 
@@ -222,6 +224,7 @@ module.exports = (conf) => {
         .pipe(gulp.dest(rule.dest));
     });
   });
+  */
 
 
   /**

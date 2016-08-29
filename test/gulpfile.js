@@ -1,4 +1,4 @@
 'use strict';
 const startanull = require('../index');
-const conf = require('./startanull-conf');
+const conf = require('./conf');
 startanull(conf);
