@@ -69,7 +69,7 @@ gulp.task('styles.batch', function() {
 // SCRIPTS
 // -------------------------------------
 
-// webpackStream js build
+// Webpack js build
 gulp.task('scripts.build', function() {
   if (!conf.scripts)
     return console.error('Scripts is disabled');
@@ -79,7 +79,7 @@ gulp.task('scripts.build', function() {
   let webpackOptions = _.clone(conf.scripts.webpack);
   // Minified file
   webpackOptions.output.filename =
-    conf.scripts.result.filename.split('.js')[0] + '.min.js';
+    conf.scripts.result.filename.replace('.js', '.min.js');
 
   // Sourcemap
   webpackOptions.output.sourceMapFilename =
@@ -196,7 +196,7 @@ gulp.task('watch', function() {
     });
   }
 
-  // webpackStream watch
+  // Webpack watch
   if (opts.j) {
     if (!conf.scripts)
       return console.error('Scripts is disabled');
@@ -470,7 +470,7 @@ gulp.task('component.watch', function() {
     });
   }
 
-  // webpackStream watch
+  // Webpack watch
   if (opts.j) {
     if (!conf.components.scripts)
       return console.error('Scripts is disabled');

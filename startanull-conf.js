@@ -33,7 +33,7 @@ let conf = confConstructor();
 //   jquery: '$'
 // };
 //
-conf.scripts.webpack.devtool = 'eval';
+// conf.scripts.webpack.devtool = 'eval';
 
 // Add image processing rules
 
