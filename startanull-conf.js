@@ -1,7 +1,5 @@
 'use strict';
 
-// const _ = require('underscore');
-// const confConstructor = require('./startanull-default-conf');
 const path = require('path');
 
 let srcDir = path.resolve(__dirname, 'src');

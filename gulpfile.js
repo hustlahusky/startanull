@@ -19,9 +19,7 @@ const browserSync = require('browser-sync').create();
 const conf = require('./startanull-conf.js');
 
 
-/**
- * Disable modules if no config for them
- */
+// Disable modules if no config for them
 let disableStyles = true;
 let disableScripts = true;
 let disableTemplates = true;
@@ -36,15 +34,32 @@ _.each(confKeys, (key) => {
 
 
 /**
- * STYLES
- * =======================================================
+ * Default
+ * -------------------------------------------------------
+ *
+ * Build styles, scripts and templates
+ *
+ * ```
+ * gulp
+ * ```
  */
+gulp.task('default', [
+  'styles',
+  'scripts.build',
+  'templates.build'
+  // 'images'
+]);
+
 
 /**
+ * Styles
+ * -------------------------------------------------------
+ *
+ * Build CSS from styles
+ *
  * ```
  * gulp styles.build
  * ```
- * Build CSS from styles
  */
 gulp.task('styles.build', (cb) => {
   if (disableStyles) return console.log('Styles module disabled');
@@ -75,7 +90,13 @@ gulp.task('styles.build', (cb) => {
 });
 
 
-// Minify CSS
+/**
+ * Minify CSS
+ *
+ * ```
+ * gulp styles.min
+ * ```
+ */
 gulp.task('styles.min', (cb) => {
   if (disableStyles) return console.log('Styles module disabled');
   glob(conf.stylesSrc, conf.globOptions, (err, files) => {
@@ -100,14 +121,15 @@ gulp.task('styles.min', (cb) => {
 });
 
 
-// Build styles
+/**
+ * Build CSS from styles and minify them
+ *
+ * ```
+ * gulp styles
+ * ```
+ */
 gulp.task('styles', () => runSequence('styles.build', 'styles.min'));
 
-
-/**
- * SCRIPTS
- * =======================================================
- */
 
 // Webpack js build
 let webpackBuilder = (opts, cb) => {
@@ -119,8 +141,6 @@ let webpackBuilder = (opts, cb) => {
   }
 
   if (!cb) cb = () => {};
-
-  console.log(opts);
 
   glob(conf.scriptsSrc, conf.globOptions, (err, files) => {
     if (err) return cb(err);
@@ -161,15 +181,29 @@ let webpackBuilder = (opts, cb) => {
   });
 };
 
+/**
+ * Scripts
+ * -------------------------------------------------------
+ *
+ * Build Scripts with Webpack. Pass `min` flag for minified version
+ *
+ * ```
+ * gulp scripts.build [--min]
+ * ```
+ */
 gulp.task('scripts.build', (cb) => webpackBuilder(cb));
 
 
 /**
- * TEMPLATES
- * =======================================================
+ * Templates
+ * -------------------------------------------------------
+ *
+ * Build HTML from Pug templates
+ *
+ * ```
+ * gulp templates.build
+ * ```
  */
-
-// Build HTML from Pug
 gulp.task('templates.build', (cb) => {
   if (disableTemplates) return console.log('Templates module disabled');
   gulp.src(conf.templatesSrc)
@@ -206,15 +240,20 @@ gulp.task('images', function() {
 
 
 /**
- * WATCHERS
- * =======================================================
+ * Watchers
+ * -------------------------------------------------------
+ *
+ * Rebuild assets on sources changed. Pass some options if you want watch for
+ * specific modules.
+ *
+ * - `s` - for styles
+ * - `j` - for scripts
+ * - `t` - for templates
+ *
+ * ```
+ * gulp watch [-s|j|t]
+ * ```
  */
-
-// gulp watch [-s|j|t]
-//   -s - for styles
-//   -j - for scripts
-//   -t - for templates
-//   if no options passed - all
 gulp.task('watch', () => {
   let opts = _.omit(argv, '_', '$0');
 
@@ -242,21 +281,18 @@ gulp.task('watch', () => {
 });
 
 
-// Serve files with browsersync
+/**
+ * BrowserSync
+ * -------------------------------------------------------
+ *
+ * Serve files with BrowserSync
+ *
+ * ```
+ * gulp serve
+ * ```
+ */
 gulp.task('serve', () => {
   browserSync.init(conf.browserSync.options);
 
   gulp.watch(conf.browserSync.watch).on('change', browserSync.reload);
 });
-
-
-// BATCH TASKS
-// -------------------------------------
-
-// build main
-gulp.task('default', [
-  'styles.batch',
-  'scripts.build',
-  'templates.build',
-  'images'
-]);

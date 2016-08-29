@@ -1,1 +1,0 @@
-{"version":3,"sources":["dummy/src/styles/style.less"],"names":[],"mappings":"AAGA;EACE,WAAA;EACA,mBAAA","sourcesContent":["// DUMMY\n// ========================================================================\n\n.dummy {\n  color: #ccc;\n  background: #bada55;\n}\n"],"file":"dummy/css/style.css","sourceRoot":"..\\..\\src\\styles"}

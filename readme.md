@@ -1,131 +1,92 @@
-# Startanull - набор задач для сборки проекта через Gulp
+# Startanull
 
-## Установка
+Startanull is Gulp builder for styles, scripts, templates, with image processing
 
-Для сборки проекта необходимо установить Node.JS, глобальный пакет Gulp
+## Install
+
+Install Node.JS and Gulp as global package.
 
 ```
 [sudo] npm install -g gulp
 ```
 
-Установить локальные зависимости проекта
+Install dependencies
 
 ```
 [sudo] npm install
 ```
 
-## Настройка
+## Setup
 
-Все настройки сборщика находятся в файле `.startanull.conf.js`
+Project settings are placed in `.startanull.conf.js`
 
-## Стандартная сборка
+Default
+-------------------------------------------------------
 
-### Стили
-
-Компиляция препроцессором
-
-```
-gulp styles.build
-```
-
-Постобработка скомпилированных стилей: расставление вендорных префиксов, причесывание (csscomb), сжатие.
-
-```
-gulp styles.dist
-```
-
-Полная сборка стилей
-
-```
-gulp styles.batch
-```
-
-### Скрипты Javascript
-
-Сборка скриптов через Webpack
-
-```
-gulp scripts.build
-```
-
-Копирование библиотек в результирующию папку
-
-```
-gulp scripts.copylibs
-```
-
-### Шаблоны Jade
-
-```
-gulp templates.build
-```
-
-### Полная сборка
+Build styles, scripts and templates
 
 ```
 gulp
 ```
 
-## Сборка компонентов
+Styles
+-------------------------------------------------------
 
-По-умолчанию данные команды работают со всеми компонентами. Чтобы собрать определенный компонент, необходимо указать
-ключ `--component`, например
-
-```
-gulp [component.task] --component=dummy
-```
-
-### Стили
-
-Компиляция препроцессором
+Build CSS from styles
 
 ```
-gulp component.styles.build
+gulp styles.build
 ```
 
-Постобработка скомпилированных стилей: расставление вендорных префиксов, причесывание (csscomb), сжатие.
+Minify CSS
 
 ```
-gulp component.styles.dist
+gulp styles.min
 ```
 
-Полная сборка стилей
+Build CSS from styles and minify them
 
 ```
-gulp component.styles.batch
+gulp styles
 ```
 
-### Скрипты Javascript
+Scripts
+-------------------------------------------------------
 
-Сборка скриптов через Webpack
-
-```
-gulp component.scripts.build
-```
-
-### Полная сборка
+Build Scripts with Webpack. Pass `min` flag for minified version
 
 ```
-gulp component.build
+gulp scripts.build [--min]
 ```
 
-## Пересборка по изменению файлов
+Templates
+-------------------------------------------------------
+
+Build HTML from Pug templates
 
 ```
-gulp watch [options]
+gulp templates.build
 ```
 
-Доступные опции:  
-`-s` - следить за стилями  
-`-j` - следить за скриптами  
-`-t` - следить за шаблонами  
+Watchers
+-------------------------------------------------------
 
-По-умолчанию, когда опций не передано, включаются все опции
+Rebuild assets on sources changed. Pass some options if you want watch for
+specific modules.
 
-Аналогично для компонентов
+- `s` - for styles
+- `j` - for scripts
+- `t` - for templates
 
 ```
-gulp component.watch [options] [--component]
+gulp watch [-s|j|t]
 ```
 
-Все опции сохраняются. Помимо этого сохраняется возможность выбрать компонент через ключ `--component`
+BrowserSync
+-------------------------------------------------------
+
+Serve files with BrowserSync
+
+```
+gulp serve
+```
