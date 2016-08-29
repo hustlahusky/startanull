@@ -1,25 +1,38 @@
 'use strict';
-
-require('es6-promise').polyfill();
-const gulp = require('gulp');
-const path = require('path');
-const autoprefixer = require('gulp-autoprefixer');
 const _ = require('underscore');
+const async = require('async');
+const path = require('path');
+const glob = require('glob');
+const gulp = require('gulp');
+const autoprefixer = require('gulp-autoprefixer');
 const cssnano = require('gulp-cssnano');
 const rename = require('gulp-rename');
 const sourcemaps = require('gulp-sourcemaps');
-const webpackStream = require('webpack-stream');
-const webpack = require('webpack');
 const pug = require('gulp-pug');
-const runSequence = require('run-sequence');
-const argv = require('yargs').argv;
-const glob = require('glob');
 const gm = require('gulp-gm');
 const watch = require('gulp-watch');
+const webpack = require('webpack');
+const webpackStream = require('webpack-stream');
+const runSequence = require('run-sequence');
+const argv = require('yargs').argv;
 const browserSync = require('browser-sync').create();
 const conf = require('./startanull-conf.js');
 
-const async = require('async');
+
+/**
+ * Disable modules if no config for them
+ */
+let disableStyles = true;
+let disableScripts = true;
+let disableTemplates = true;
+let disableImages = true;
+let confKeys = _.keys(conf);
+_.each(confKeys, (key) => {
+  if (key.search('styles') >= 0) disableStyles = false;
+  if (key.search('scripts') >= 0) disableScripts = false;
+  if (key.search('templates') >= 0) disableTemplates = false;
+  if (key.search('img') >= 0) disableImages = false;
+});
 
 
 /**
@@ -34,6 +47,7 @@ const async = require('async');
  * Build CSS from styles
  */
 gulp.task('styles.build', (cb) => {
+  if (disableStyles) return console.log('Styles module disabled');
   glob(conf.stylesSrc, conf.globOptions, (err, files) => {
     if (err) return cb(err);
 
@@ -63,6 +77,7 @@ gulp.task('styles.build', (cb) => {
 
 // Minify CSS
 gulp.task('styles.min', (cb) => {
+  if (disableStyles) return console.log('Styles module disabled');
   glob(conf.stylesSrc, conf.globOptions, (err, files) => {
     if (err) return cb(err);
 
@@ -96,6 +111,8 @@ gulp.task('styles', () => runSequence('styles.build', 'styles.min'));
 
 // Webpack js build
 let webpackBuilder = (opts, cb) => {
+  if (disableScripts) return console.log('Scripts module disabled');
+
   if (typeof opts === 'function') {
     cb = opts;
     opts = argv;
@@ -154,6 +171,7 @@ gulp.task('scripts.build', (cb) => webpackBuilder(cb));
 
 // Build HTML from Pug
 gulp.task('templates.build', (cb) => {
+  if (disableTemplates) return console.log('Templates module disabled');
   gulp.src(conf.templatesSrc)
     .pipe(pug(conf.templatesPugOpts))
     .pipe(gulp.dest(conf.templatesDest))
@@ -166,8 +184,7 @@ gulp.task('templates.build', (cb) => {
 
 // gulp images [--rules=(rules separated with commas)]
 gulp.task('images', function() {
-  if (!conf.img)
-    return console.error('Image processing is disabled');
+  if (disableImages) return console.log('Images module disabled');
 
   let rules = conf.img.rules;
   if (argv.rules)
@@ -201,11 +218,11 @@ gulp.task('images', function() {
 gulp.task('watch', () => {
   let opts = _.omit(argv, '_', '$0');
 
-  // If no options, set all to true
+  // If no options, set all by default activated modules
   if (_.isEmpty(opts)) {
-    opts.s = true;
-    opts.j = true;
-    opts.t = true;
+    opts.s = disableStyles;
+    opts.j = disableScripts;
+    opts.t = disableTemplates;
   }
 
   // Rebuild styles on change
