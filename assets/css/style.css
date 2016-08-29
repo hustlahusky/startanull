@@ -10,5 +10,8 @@ html {
   -moz-box-sizing: inherit;
   box-sizing: inherit;
 }
+body {
+  background: #000;
+}
 
 /*# sourceMappingURL=style.css.map */

@@ -11,12 +11,26 @@ let conf = {};
 
 conf.globOptions = {dot: true};
 
+// BrowserSync
+conf.browserSync = {
+  options: {
+    server: resDir
+  },
+
+  watch: [
+    resDir + path.sep + '**',
+    '!' + srcDir + path.sep + '**'
+  ]
+};
+
 // Styles
 conf.stylesProc = require('gulp-less');
 conf.stylesProcOpts = {};
 
 conf.stylesSrc = path.resolve(srcDir, 'styles') + path.sep + 'style.less';
 conf.stylesDest = path.resolve(resDir, 'css');
+conf.stylesWatch = path.resolve(srcDir, 'styles') +
+  `${path.sep}**${path.sep}*.less`;
 
 conf.stylesAutoprefixer = {
   browsers: ['Android 2.3', 'Android >= 4', 'Chrome >= 20', 'Firefox >= 24',
@@ -52,6 +66,7 @@ conf.scriptsWebpack.module = {
 // Templates
 conf.templatesSrc = path.resolve(srcDir, 'pug') + path.sep + '*.pug';
 conf.templatesDest = resDir;
+conf.templatesWatch = '';
 conf.templatesPugOpts = {
   locals: {},
   pretty: true
