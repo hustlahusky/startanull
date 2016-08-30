@@ -247,9 +247,9 @@ module.exports = (conf) => {
 
     // If no options, set all by default activated modules
     if (_.isEmpty(opts)) {
-      opts.s = conf.disableStyles;
-      opts.j = conf.disableScripts;
-      opts.t = conf.disableTemplates;
+      opts.s = !conf.disableStyles;
+      opts.j = !conf.disableScripts;
+      opts.t = !conf.disableTemplates;
     }
 
     // Rebuild styles on change
