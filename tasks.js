@@ -186,7 +186,7 @@ module.exports = (conf) => {
     let dest = conf.templatesDest;
     if (!dest) dest = defaultDest;
 
-    gulp.src(conf.templatesSrc)
+    gulp.src(conf.templatesSrc, conf.globOptions)
       .pipe(pug(conf.templatesPugOpts))
       .pipe(gulp.dest(dest))
       .on('end', cb);
