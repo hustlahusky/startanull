@@ -3,6 +3,7 @@ const _ = require('underscore');
 const async = require('async');
 const path = require('path');
 const glob = require('glob');
+const File = require('vinyl');
 const autoprefixer = require('gulp-autoprefixer');
 const cssnano = require('gulp-cssnano');
 const rename = require('gulp-rename');
@@ -18,6 +19,8 @@ const browserSync = require('browser-sync').create();
 module.exports = (conf) => {
   const gulp = conf.gulp;
   const runSequence = require('run-sequence').use(gulp);
+
+  let defaultDest = (file) => path.dirname(file.path);
 
   /**
    * Default
@@ -49,30 +52,24 @@ module.exports = (conf) => {
    */
   gulp.task('styles.build', (cb) => {
     if (conf.disableStyles) return console.log('Styles module disabled');
-    glob(conf.stylesSrc, conf.globOptions, (err, files) => {
-      if (err) return cb(err);
 
-      async.each(files, (file, cb) => {
-        file = path.resolve(file);
+    let dest = conf.stylesDest;
+    if (!dest) dest = defaultDest;
 
-        let srcDir = path.dirname(file);
-
-        let dest = conf.stylesDest;
-        if (!dest) dest = srcDir;
-
-        let mapsOptions = _.defaults(conf.stylesMaps, {
-          sourceRoot: path.relative(dest, srcDir)
-        });
-
-        gulp.src(file)
-          .pipe(sourcemaps.init())
-          .pipe(conf.stylesProc(conf.stylesProcOpts))
-          .pipe(autoprefixer(conf.stylesAutoprefixer))
-          .pipe(sourcemaps.write('.', mapsOptions))
-          .pipe(gulp.dest(dest))
-          .on('end', cb);
-      }, (err) => cb(err));
+    let mapsOptions = _.defaults(conf.stylesMaps, {
+      sourceRoot: (file) => {
+        if (typeof dest === 'function') dest = dest(file);
+        return path.relative(dest, path.dirname(file.path));
+      }
     });
+
+    gulp.src(conf.stylesSrc, conf.globOptions)
+      .pipe(sourcemaps.init())
+      .pipe(conf.stylesProc(conf.stylesProcOpts))
+      .pipe(autoprefixer(conf.stylesAutoprefixer))
+      .pipe(sourcemaps.write('.', mapsOptions))
+      .pipe(gulp.dest(dest))
+      .on('end', cb);
   });
 
 
@@ -85,17 +82,19 @@ module.exports = (conf) => {
    */
   gulp.task('styles.min', (cb) => {
     if (conf.disableStyles) return console.log('Styles module disabled');
+
     glob(conf.stylesSrc, conf.globOptions, (err, files) => {
       if (err) return cb(err);
 
       async.each(files, (file, cb) => {
-        file = path.resolve(file);
+        file = new File({path: file});
 
         let dest = conf.stylesDest;
-        if (!dest) dest = path.dirname(file);
+        if (!dest) dest = defaultDest;
 
-        let ext = path.extname(file);
-        file = dest + path.sep + path.basename(file, ext) + '.css';
+        let ext = path.extname(file.path);
+        let dir = (typeof dest === 'function' ? dest(file) : dest);
+        file = dir + path.sep + path.basename(file.path, ext) + '.css';
 
         gulp.src(file)
           .pipe(cssnano())
@@ -128,43 +127,34 @@ module.exports = (conf) => {
 
     if (!cb) cb = () => {};
 
-    glob(conf.scriptsSrc, conf.globOptions, (err, files) => {
-      if (err) return cb(err);
+    let dest = conf.scriptsDest;
+    if (!dest) dest = defaultDest;
 
-      async.each(files, (file, cb) => {
-        file = path.resolve(file);
+    let wpConf = _.clone(conf.scriptsWebpack);
 
-        let dest = conf.scriptsDest;
-        if (!dest) dest = path.dirname(file);
+    // Watching
+    if (opts.watch) wpConf.watch = true;
 
-        let webpackConfig = _.clone(conf.scriptsWebpack);
+    // Minifying
+    if (opts.min) {
+      wpConf.output.filename = wpConf.output.filename.replace('.js', '.min.js');
 
-        // Watching
-        if (opts.watch) webpackConfig.watch = true;
+      if (_.isEmpty(wpConf.plugins))
+        wpConf.plugins = [];
 
-        // Minifying
-        if (opts.min) {
-          webpackConfig.output.filename =
-            webpackConfig.output.filename.replace('.js', '.min.js');
+      wpConf.plugins.push(
+        new webpack.optimize.UglifyJsPlugin({
+          compress: {
+            warnings: false
+          }
+        })
+      );
+    }
 
-          if (_.isEmpty(webpackConfig.plugins))
-            webpackConfig.plugins = [];
-
-          webpackConfig.plugins.push(
-            new webpack.optimize.UglifyJsPlugin({
-              compress: {
-                warnings: false
-              }
-            })
-          );
-        }
-
-        gulp.src(file)
-          .pipe(webpackStream(webpackConfig))
-          .pipe(gulp.dest(dest))
-          .on('end', cb);
-      }, (err) => cb(err));
-    });
+    gulp.src(conf.scriptsSrc, conf.globOptions)
+      .pipe(webpackStream(wpConf))
+      .pipe(gulp.dest(dest))
+      .on('end', cb);
   };
 
   /**
@@ -192,9 +182,13 @@ module.exports = (conf) => {
    */
   gulp.task('templates.build', (cb) => {
     if (conf.disableTemplates) return console.log('Templates module disabled');
+
+    let dest = conf.templatesDest;
+    if (!dest) dest = defaultDest;
+
     gulp.src(conf.templatesSrc)
       .pipe(pug(conf.templatesPugOpts))
-      .pipe(gulp.dest(conf.templatesDest))
+      .pipe(gulp.dest(dest))
       .on('end', cb);
   });
 
