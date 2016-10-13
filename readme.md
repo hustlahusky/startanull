@@ -1,24 +1,45 @@
 # Startanull
 
-Startanull is Gulp builder for styles, scripts, templates, with image processing
+Startanull is Gulp builder for styles, scripts, templates.
 
-## Install
+## Prepare for using
 
-Install Node.JS and Gulp as global package.
+1. Install latest Node.JS
 
-```
-[sudo] npm install -g gulp
-```
+	```bash
+	$ node --version
+	>> v6.3.*
+	$ npm --version
+	>> 3.*
+	```
 
-Install dependencies
+1. Install Gulp as global package.
 
-```
-[sudo] npm install
-```
+	```
+	[sudo] npm install -g gulp
+	```
 
 ## Setup
 
-Project settings are placed in `.startanull.conf.js`
+1. Install `gulp` and `startanull` packages as development dependencies for your project. To do this, run next command in your project folder:
+
+	```bash
+	$ npm install --save-dev gulp startanull
+	```
+
+1. Create `gulpfile.js` in your project folder
+
+	```javascript
+	'use strict';
+	const startanull = require('startanull');
+	const conf = {...}; // config object for startanull
+	const gulp = conf.gulp = require('gulp');
+	startanull(conf);
+	```
+
+1. Setup config. You can find sample config and gulpfile in `test` folder
+
+# Tasks
 
 Default
 -------------------------------------------------------
